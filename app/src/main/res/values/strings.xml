@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">PictoRutinas</string>
+    <string name="araasac">ARAASAC</string>
+    <string name="tvimagen">tvImagen</string>
+    <string name="sinresultados">No hay ningún resultado</string>
+    <string name="error">error</string>
+    <string name="urlaraasac">https://api.arasaac.org/api/</string>
+    <string name="id">id</string>
+    <string name="locale">es</string>
+</resources>

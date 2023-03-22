@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <TextView
+        android:id="@+id/campo_texto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/araasac"
+        android:textColor="@color/black"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:textSize="30dp"
+        app:layout_constraintBottom_toTopOf="parent"/>
+
+    <android.widget.SearchView
+        android:id="@+id/Busqueda"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginTop="50dp"
+        android:iconifiedByDefault="false"
+        android:imeOptions="actionDone"
+        android:labelFor="@id/Busqueda"
+        android:queryHint="Buscar Pictograma"
+        android:suggestionRowLayout="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_weight="1"
+        android:fillViewport="false"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:layout_marginTop="95dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:contentDescription="Scroll">
+
+
+        <LinearLayout
+            android:id="@+id/Linearlayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageView
+                    android:id="@+id/tvImagen0"
+                    android:layout_width="180dp"
+                    android:layout_height="180dp"
+                    android:layout_marginTop="16dp"
+                    android:scaleType="centerCrop"
+                    android:layout_marginLeft="10dp"/>
+
+                <ImageView
+                    android:id="@+id/tvImagen1"
+                    android:layout_width="180dp"
+                    android:layout_height="180dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="10dp"
+                    android:scaleType="centerCrop" />
+            </LinearLayout>
+
+            <LinearLayout android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageView
+                    android:id="@+id/tvImagen2"
+                    android:layout_width="180dp"
+                    android:layout_height="180dp"
+                    android:layout_marginTop="16dp"
+                    android:scaleType="centerCrop"
+                    android:layout_marginLeft="10dp"/>
+
+                <ImageView
+                    android:id="@+id/tvImagen3"
+                    android:layout_width="180dp"
+                    android:layout_height="180dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="10dp"
+                    android:scaleType="centerCrop" />
+            </LinearLayout>
+
+            <LinearLayout android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageView
+                    android:id="@+id/tvImagen4"
+                    android:layout_width="180dp"
+                    android:layout_height="180dp"
+                    android:layout_marginTop="16dp"
+                    android:scaleType="centerCrop"
+                    android:layout_marginLeft="10dp"/>
+
+                <ImageView
+                    android:id="@+id/tvImagen5"
+                    android:layout_width="180dp"
+                    android:layout_height="180dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="10dp"
+                    android:scaleType="centerCrop" />
+            </LinearLayout>
+
+            <LinearLayout android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageView
+                    android:id="@+id/tvImagen6"
+                    android:layout_width="180dp"
+                    android:layout_height="180dp"
+                    android:layout_marginTop="16dp"
+                    android:scaleType="centerCrop"
+                    android:layout_marginLeft="10dp"/>
+
+                <ImageView
+                    android:id="@+id/tvImagen7"
+                    android:layout_width="180dp"
+                    android:layout_height="180dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="10dp"
+                    android:scaleType="centerCrop" />
+            </LinearLayout>
+    </LinearLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
