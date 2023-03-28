@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "259921156060",
+    "project_id": "pictorutinas-f7ad5",
+    "storage_bucket": "pictorutinas-f7ad5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:259921156060:android:7c6723ae42ec9eeb7c6119",
+        "android_client_info": {
+          "package_name": "com.example.tfgpictorutinas"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "259921156060-erokd34454u9vf7d8pjsug485euf04g2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tfgpictorutinas",
+            "certificate_hash": "60aef039ef59b43f21390b06d03c7dc3ea6c6c91"
+          }
+        },
+        {
+          "client_id": "259921156060-g6k4qostdh403ev9aiidcvhjojplhmps.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCipkv7Emt0Gjuw9g0CPZs75WtC6MyQCp4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "259921156060-g6k4qostdh403ev9aiidcvhjojplhmps.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

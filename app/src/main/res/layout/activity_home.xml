@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HomeActivity">
+
+
+    <!--cabecera-->
+    <TextView
+        android:id="@+id/idheadTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="Rutinas"
+        android:textAlignment="center"
+        android:layout_marginTop="15dp"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/black"
+        android:textSize="40sp" />
+
+    <!--Boton de logout-->
+    <Button
+        android:id="@+id/idBtnGA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/idheadTV"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="490dp"
+        android:text="Gestión Alumnos"
+        android:textSize="25dp"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        android:drawableLeft="@drawable/alumno"
+        android:backgroundTint="@color/grey"/>
+
+    <Button
+        android:id="@+id/idBtnAraasac"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/idheadTV"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="570dp"
+        android:text="Araasac"
+        android:textSize="15dp"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        android:backgroundTint="@color/cardview_light_background"/>
+
+    <!--Boton de logout-->
+    <Button
+        android:id="@+id/idBtnLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/idheadTV"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="570dp"
+        android:layout_marginLeft="290dp"
+        android:text="Logout"
+        android:textAllCaps="false" />
+
+</RelativeLayout>

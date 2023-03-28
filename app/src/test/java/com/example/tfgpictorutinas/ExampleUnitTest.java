@@ -1,4 +1,4 @@
-package com.example.pictorutinas;
+package com.example.tfgpictorutinas;
 
 import org.junit.Test;
 

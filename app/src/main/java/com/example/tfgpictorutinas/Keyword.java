@@ -1,5 +1,5 @@
 
-package com.example.pictorutinas;
+package com.example.tfgpictorutinas;
 
 
 import com.google.gson.annotations.Expose;

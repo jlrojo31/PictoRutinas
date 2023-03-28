@@ -1,4 +1,4 @@
-package com.example.pictorutinas;
+package com.example.tfgpictorutinas;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.tfgpictorutinas.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
