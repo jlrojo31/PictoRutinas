@@ -20,16 +20,35 @@
         android:textColor="@color/black"
         android:textSize="40sp" />
 
-    <!--Boton de logout-->
+    <ListView
+        android:id="@+id/lista"
+        android:layout_marginTop="90dp"
+        android:layout_height="440dp"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
+        android:background="@color/grey"
+        android:divider="@drawable/list_divider"
+        android:scrollbarAlwaysDrawVerticalTrack="true">
+    </ListView>
+
+    <Button
+        android:id="@+id/idBtnAniadir"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/lista"
+        android:layout_marginLeft="310dp"
+        android:drawableLeft="@drawable/plus_circle_outline"
+        android:backgroundTint="@color/cardview_light_background"/>
+
     <Button
         android:id="@+id/idBtnGA"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/idheadTV"
+        android:layout_width="340dp"
+        android:layout_height="55dp"
+        android:layout_below="@id/idBtnAniadir"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="490dp"
         android:text="Gestión Alumnos"
-        android:textSize="25dp"
+        android:textSize="21dp"
         android:textAllCaps="false"
         android:textColor="@color/black"
         android:drawableLeft="@drawable/alumno"

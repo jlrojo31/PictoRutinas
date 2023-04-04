@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,12 +19,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class HomeActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
 
+public class HomeActivity extends AppCompatActivity {
+    Adaptador adapter;
+    ArrayList<Rutina> listaRutinas = new ArrayList();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
         //MIO
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
         if (usuario != null) {
@@ -42,6 +49,26 @@ public class HomeActivity extends AppCompatActivity {
             // No user is signed in
         }
         //MIO
+
+        //Generación de listView
+        ListView list = (ListView) findViewById(R.id.lista);
+        this.adapter = new Adaptador(this, this.listaRutinas);
+
+        // boton de aniadir
+        Button AniadirBtn = findViewById(R.id.idBtnAniadir);
+
+        // onclick listener para el boton de logout
+        AniadirBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Rutina a = new Rutina(listaRutinas.size()+1,"Rutina" + (listaRutinas.size()+1), "" + R.drawable.alumno); //@todo Revisar
+                listaRutinas.add(a);
+                list.setAdapter(adapter);
+            }
+        });
+
+
         // boton de logout
         Button logoutBtn = findViewById(R.id.idBtnLogout);
 
