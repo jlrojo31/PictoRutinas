@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_marginLeft="35dp"
         android:layout_marginRight="35dp"
-        android:background="@color/grey"
+        android:background="@color/white"
         android:divider="@drawable/list_divider"
         android:scrollbarAlwaysDrawVerticalTrack="true">
     </ListView>

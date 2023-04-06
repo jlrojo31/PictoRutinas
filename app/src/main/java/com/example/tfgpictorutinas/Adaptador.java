@@ -2,6 +2,9 @@ package com.example.tfgpictorutinas;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.media.Image;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -55,24 +58,29 @@ public class Adaptador extends BaseAdapter {
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             vi = inflater.inflate(R.layout.item_rutina, null);
 
-            holder.caption = (EditText) vi
-                    .findViewById(R.id.idnom);
-            holder.caption.setTag(position);
-            holder.caption.setText(rutinas.get(position).getNombre().toString());
+            holder.editText = (EditText) vi.findViewById(R.id.idnom);
+            holder.editText.setTag(position);
+            holder.editText.setText(rutinas.get(position).getNombre().toString());
+            holder.imageView = (ImageView) vi.findViewById(R.id.foto);
+            holder.imageView.setTag(position);
+            //holder.image.setImageResource(); //todo revisar
             vi.setTag(holder);
         }else {
             holder = (ViewHolder) vi.getTag();
         }
 
-        int tag_position=(Integer) holder.caption.getTag();
-        holder.caption.setId(tag_position);
+        int tag_EditText_position=(Integer) holder.editText.getTag();
+        holder.editText.setId(tag_EditText_position);
+        int tag_ImageView_position=(Integer) holder.imageView.getTag();
+        holder.imageView.setId(tag_ImageView_position);
 
-        holder.caption.addTextChangedListener(new TextWatcher() {
+
+        holder.editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before,
                                       int count) {
-                final int position2 = holder.caption.getId();
-                final EditText Caption = (EditText) holder.caption;
+                final int position2 = holder.editText.getId();
+                final EditText Caption = (EditText) holder.editText;
                 if(Caption.getText().toString().length()>0){
                     Rutina aux=rutinas.get(position2);
                     rutinas.get(position2).setNombre(Caption.getText().toString());
@@ -92,10 +100,21 @@ public class Adaptador extends BaseAdapter {
 
         });
 
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(holder.imageView.getContext(), RutinaDef.class);
+                i.putExtra("idRutina", holder.editText.getId());
+                i.putExtra("nombre", holder.editText.getText().toString());
+                holder.imageView.getContext().startActivity(i);
+            }
+        });
+
         return vi;
     }
 }
 
 class ViewHolder {
-    EditText caption;
+    ImageView imageView;
+    EditText editText;
 }

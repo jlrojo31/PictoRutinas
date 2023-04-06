@@ -3,6 +3,7 @@ package com.example.tfgpictorutinas;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -24,7 +25,7 @@ import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
     Adaptador adapter;
-    ArrayList<Rutina> listaRutinas = new ArrayList();
+    ArrayList<Rutina> listaRutinas = new ArrayList(50);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +54,18 @@ public class HomeActivity extends AppCompatActivity {
         //Generación de listView
         ListView list = (ListView) findViewById(R.id.lista);
         this.adapter = new Adaptador(this, this.listaRutinas);
+
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+
+                //Object o = listView.getItemAtPosition(position);
+                // Realiza lo que deseas, al recibir clic en el elemento de tu listView determinado por su posicion.
+                Toast.makeText(HomeActivity.this, "pulsado", Toast.LENGTH_SHORT).show();
+
+            }
+        });
 
         // boton de aniadir
         Button AniadirBtn = findViewById(R.id.idBtnAniadir);

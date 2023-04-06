@@ -7,4 +7,9 @@
     <string name="urlaraasac">https://api.arasaac.org/api/</string>
     <string name="id">id</string>
     <string name="locale">es</string>
+    <string name="edrutina">Editar rutina</string>
+    <string name="participantes">Participantes de la tarea</string>
+    <string name="repeticiones">Repeticiones</string>
+    <string name="añadirtarea">Añadir tarea</string>
+    <string name="eliminarrutina">Eliminar rutina</string>
 </resources>
