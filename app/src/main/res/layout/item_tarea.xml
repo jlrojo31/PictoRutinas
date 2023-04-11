@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tarea"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <Button
+        android:id="@+id/idBtnBTarea"
+        android:layout_width="55dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:drawableLeft="@drawable/delete_tarea"
+        android:drawableTint="@color/grey"
+        android:backgroundTint="@color/cardview_light_background"/>
+
+    <Button
+        android:id="@+id/idBtnETarea"
+        android:layout_width="55dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:drawableLeft="@drawable/edit_tarea"
+        android:drawableTint="@color/grey"
+        android:backgroundTint="@color/cardview_light_background"/>
+
+    <ImageView
+        android:id="@+id/fotoTarea"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_marginLeft="5dp"
+        android:src="@drawable/alumno2" />
+
+    <TextView
+        android:id="@+id/idNomTarea"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="0:00\n\nNombre tarea"
+        android:textColor="@color/black"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
+        android:textSize="20sp"
+        />
+
+</LinearLayout>

@@ -51,9 +51,10 @@ public class Adaptador extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         final ViewHolder holder;
         View vi = convertView;
-        p=position;
+
         if(vi == null) {
             holder = new ViewHolder();
+            //todo esto debajo del else (problema de numero
             LayoutInflater inflater = (LayoutInflater) activity
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             vi = inflater.inflate(R.layout.item_rutina, null);
@@ -63,17 +64,18 @@ public class Adaptador extends BaseAdapter {
             holder.editText.setText(rutinas.get(position).getNombre().toString());
             holder.imageView = (ImageView) vi.findViewById(R.id.foto);
             holder.imageView.setTag(position);
-            //holder.image.setImageResource(); //todo revisar
+            //holder.iresource failed to call closemage.setImageResource(); //todo revisar
             vi.setTag(holder);
+            //fin todo esto debajo del else
         }else {
             holder = (ViewHolder) vi.getTag();
         }
+
 
         int tag_EditText_position=(Integer) holder.editText.getTag();
         holder.editText.setId(tag_EditText_position);
         int tag_ImageView_position=(Integer) holder.imageView.getTag();
         holder.imageView.setId(tag_ImageView_position);
-
 
         holder.editText.addTextChangedListener(new TextWatcher() {
             @Override

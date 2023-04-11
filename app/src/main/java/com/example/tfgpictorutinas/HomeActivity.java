@@ -25,7 +25,7 @@ import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
     Adaptador adapter;
-    ArrayList<Rutina> listaRutinas = new ArrayList(50);
+    ArrayList<Rutina> listaRutinas = new ArrayList(30);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +70,7 @@ public class HomeActivity extends AppCompatActivity {
         // boton de aniadir
         Button AniadirBtn = findViewById(R.id.idBtnAniadir);
 
-        // onclick listener para el boton de logout
+        // onclick listener para el boton de aniadir
         AniadirBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
