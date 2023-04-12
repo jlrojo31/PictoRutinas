@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TareaDef">
+
+    <ImageView
+        android:id="@+id/fotoTareaDef"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="80dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/alumno2" />
+
+    <TextView
+        android:id="@+id/textodescricionTareaDef"
+        android:layout_width="350dp"
+        android:layout_height="40dp"
+        android:padding="12dp"
+        android:text="Descripción"
+        android:layout_marginTop="70dp"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/grey"
+        android:textSize="15sp"
+        android:layout_below="@id/fotoTareaDef"
+        tools:ignore="MissingConstraints" />
+
+    <EditText
+        android:id="@+id/EtDescripcionTareaDef"
+        android:layout_width="370dp"
+        android:layout_height="50dp"
+        android:padding="10dp"
+        android:hint="Introduzca descripción"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/custom_background"
+        android:textColor="@color/black"
+        android:singleLine="true"
+        android:textSize="20sp"
+        android:backgroundTint="@color/grey"
+        android:layout_below="@id/textodescricionTareaDef"
+        tools:ignore="MissingConstraints" />
+
+    <EditText
+        android:id="@+id/tiempoTareaDef"
+        android:layout_width="180dp"
+        android:layout_height="90dp"
+        android:inputType="time"
+        android:hint="00:00"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        android:textColor="@color/grey"
+        android:textSize="70dp"
+        android:layout_below="@id/EtDescripcionTareaDef"
+        tools:ignore="MissingConstraints" />
+
+
+
+    <Button
+        android:id="@+id/idBtActualizarTarea"
+        android:layout_width="240dp"
+        android:layout_height="55dp"
+        android:layout_centerHorizontal="true"
+        android:text="Actualizar"
+        android:textSize="15dp"
+        android:textColor="@color/black"
+        android:textAllCaps="false"
+        android:backgroundTint="@color/grey"
+        android:layout_below="@id/tiempoTareaDef"
+        android:layout_marginTop="30dp" />
+
+
+</RelativeLayout>

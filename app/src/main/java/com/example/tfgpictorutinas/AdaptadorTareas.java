@@ -85,6 +85,14 @@ public class AdaptadorTareas extends BaseAdapter {
         holder.textView.setId(tag_TextView_position);
 
 
+        holder.editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(holder.editButton.getContext(), TareaDef.class);
+                i.putExtra("idTarea", holder.textView.getId()); // Todo habra que dejar un id de bbdd para pasar a la siguiente pantalla
+                holder.imageView.getContext().startActivity(i);
+            }
+        });
 
         return vi;
     }
