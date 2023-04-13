@@ -1,9 +1,16 @@
 package com.example.tfgpictorutinas;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Base64;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -13,6 +20,7 @@ import com.example.tfgpictorutinas.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
 import okhttp3.ResponseBody;
@@ -57,6 +65,7 @@ public class AraasacPics extends AppCompatActivity {
                 return false;
             }
         });
+
     }
 
 
@@ -69,6 +78,9 @@ public class AraasacPics extends AppCompatActivity {
                 Bitmap png = BitmapFactory.decodeStream(is);
                 ImageView imgView = findViewById(pantalla);
                 imgView.setImageBitmap(png);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    imgView.setTooltipText(id);
+                }
             }
 
             @Override
@@ -101,4 +113,42 @@ public class AraasacPics extends AppCompatActivity {
             }
         });
     }
+
+
+    public void clickPicto(View v){
+            switch(v.getId()){
+                case R.id.tvImagen0:
+                case R.id.tvImagen1:
+                case R.id.tvImagen2:
+                case R.id.tvImagen3:
+                case R.id.tvImagen4:
+                case R.id.tvImagen5:
+                case R.id.tvImagen6:
+                case R.id.tvImagen7:
+                    Intent i = new Intent(AraasacPics.this, TareaDef.class);
+                    Bundle extras = getIntent().getExtras();
+                    ImageView imgView = findViewById(v.getId());
+                    Bitmap bitmap = ((BitmapDrawable) imgView.getDrawable()).getBitmap();
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG,100,byteArrayOutputStream);
+                    byte[] byteArray = byteArrayOutputStream.toByteArray();
+                    String encode = Base64.encodeToString(byteArray,Base64.DEFAULT);
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        i.putExtra("idPicto", v.getTooltipText());
+                    }
+                    i.putExtra("imagen", encode);
+                    startActivity(i);
+                    break;
+                default:
+                    break;
+            }
+                /*Intent i = new Intent(RutinaDef.this, EditorTareas.class);
+                Bundle extras = getIntent().getExtras();
+                if (extras!=null) {
+                    i.putExtra("idRutina", extras.getInt("idRutina"));
+                    i.putExtra("nombre", extras.getString("nombre"));
+                }
+                startActivity(i);*/
+        }
 }

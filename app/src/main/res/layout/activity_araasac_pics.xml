@@ -67,7 +67,8 @@
                     android:layout_height="180dp"
                     android:layout_marginTop="16dp"
                     android:scaleType="centerCrop"
-                    android:layout_marginLeft="10dp"/>
+                    android:layout_marginLeft="10dp"
+                    android:onClick="clickPicto"/>
 
                 <ImageView
                     android:id="@+id/tvImagen1"
@@ -75,7 +76,8 @@
                     android:layout_height="180dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginLeft="10dp"
-                    android:scaleType="centerCrop" />
+                    android:scaleType="centerCrop"
+                    android:onClick="clickPicto"/>
             </LinearLayout>
 
             <LinearLayout android:layout_width="match_parent"
@@ -87,7 +89,8 @@
                     android:layout_height="180dp"
                     android:layout_marginTop="16dp"
                     android:scaleType="centerCrop"
-                    android:layout_marginLeft="10dp"/>
+                    android:layout_marginLeft="10dp"
+                    android:onClick="clickPicto"/>
 
                 <ImageView
                     android:id="@+id/tvImagen3"
@@ -95,7 +98,8 @@
                     android:layout_height="180dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginLeft="10dp"
-                    android:scaleType="centerCrop" />
+                    android:scaleType="centerCrop"
+                    android:onClick="clickPicto"/>
             </LinearLayout>
 
             <LinearLayout android:layout_width="match_parent"
@@ -107,7 +111,8 @@
                     android:layout_height="180dp"
                     android:layout_marginTop="16dp"
                     android:scaleType="centerCrop"
-                    android:layout_marginLeft="10dp"/>
+                    android:layout_marginLeft="10dp"
+                    android:onClick="clickPicto"/>
 
                 <ImageView
                     android:id="@+id/tvImagen5"
@@ -115,7 +120,8 @@
                     android:layout_height="180dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginLeft="10dp"
-                    android:scaleType="centerCrop" />
+                    android:scaleType="centerCrop"
+                    android:onClick="clickPicto"/>
             </LinearLayout>
 
             <LinearLayout android:layout_width="match_parent"
@@ -127,7 +133,8 @@
                     android:layout_height="180dp"
                     android:layout_marginTop="16dp"
                     android:scaleType="centerCrop"
-                    android:layout_marginLeft="10dp"/>
+                    android:layout_marginLeft="10dp"
+                    android:onClick="clickPicto"/>
 
                 <ImageView
                     android:id="@+id/tvImagen7"
@@ -135,7 +142,8 @@
                     android:layout_height="180dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginLeft="10dp"
-                    android:scaleType="centerCrop" />
+                    android:scaleType="centerCrop"
+                    android:onClick="clickPicto"/>
             </LinearLayout>
     </LinearLayout>
 
