@@ -4,20 +4,30 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.tfgpictorutinas.R;
+import com.example.tfgpictorutinas.firebaseRDB.Usuario;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-
+    private static final String TAG = "MainActivity";
     // variable for Firebase Auth
     private FirebaseAuth mFirebaseAuth;
 
@@ -57,6 +67,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 
+                String name = "";
+                String email = "";
+                boolean administrador = true;
                 // we are calling method for on authentication state changed.
                 // below line is used for getting current user which is
                 // authenticated previously.
@@ -69,8 +82,8 @@ public class MainActivity extends AppCompatActivity {
                     FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
                     if (usuario != null) {
                         // User is signed in
-                        String name = usuario.getDisplayName();
-                        String email = usuario.getEmail();
+                        name = usuario.getDisplayName();
+                        email = usuario.getEmail();
                         Uri photoUrl = usuario.getPhotoUrl();
 
                         // Check if user's email is verified
@@ -85,11 +98,82 @@ public class MainActivity extends AppCompatActivity {
                     }
                     //MIO
 
-                    // if the user is already authenticated then we will
-                    // redirect our user to next screen which is our home screen.
-                    // we are redirecting to new screen via an intent.
-                    Intent i = new Intent(MainActivity.this, HomeActivity.class);
-                    startActivity(i);
+                    //Firebase RealTime Database
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference myRef = database.getReference().child("pictorutinas").child("usuarios");
+
+                   /* // Read from the database
+                    myRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            // This method is called once with the initial value and again
+                            // whenever data at this location is updated.
+                            Map<String,Object> value = (Map<String, Object>) dataSnapshot.getValue();
+                            Log.d(TAG, "Value is: " + value);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            // Failed to read value
+                            Log.w(TAG, "Failed to read value.", error.toException());
+                        }
+                    });
+                    */
+
+                    /*if (usuario != null) {
+                        // MIRAR SI NO EXISTE USUARIO EN LA BBDD Y AÑADIRLO
+                        name = usuario.getDisplayName();
+                        email = usuario.getEmail();
+                        administrador = true; //Total  a retocar
+                        Usuario usu = new Usuario(name,email,administrador);
+                        myRef.push().setValue(usu);
+                    } else {
+                        // No user is signed in
+                    }*/
+
+
+                    myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            String nombre="";
+                            String email="";
+                            boolean administrador=true;
+                            boolean existe = false;
+                            if (usuario != null) {
+                                // MIRAR SI NO EXISTE USUARIO EN LA BBDD Y AÑADIRLO
+                                nombre = usuario.getDisplayName();
+                                email = usuario.getEmail();
+                                administrador = true; //Total  a retocar
+                                Usuario usu = new Usuario(nombre,email,administrador);
+                                for(DataSnapshot data: dataSnapshot.getChildren()){
+                                    HashMap dataHash = (HashMap) data.getValue();
+                                    if (email.equals((String) dataHash.get("email"))){
+                                        existe = true;
+                                        break;
+                                    };
+                                }
+                                if (!existe) myRef.push().setValue(usu);
+                            } else {
+                                // No user is signed in
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                    //Fin Firebase RealTime Database
+
+                    if (administrador) {
+                        // if the user is already authenticated then we will
+                        // redirect our user to next screen which is our home screen.
+                        // we are redirecting to new screen via an intent.
+                        Intent i = new Intent(MainActivity.this, HomeActivity.class);
+                        startActivity(i);
+                    }else{
+                        Intent i = new Intent(MainActivity.this, HomeAlumno.class);
+                        startActivity(i);
+                    }
                     // we are calling finish method to kill or
                     // mainactivity which is displaying our login ui.
                     finish();
