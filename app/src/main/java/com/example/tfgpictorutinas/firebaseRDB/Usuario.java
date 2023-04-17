@@ -2,9 +2,9 @@ package com.example.tfgpictorutinas.firebaseRDB;
 
 public class Usuario {
 
-    String nombre;
-    String email;
-    boolean administrador;
+    String nombre ="";
+    String email="";
+    boolean administrador=false;
 
     public Usuario(String nombre, String email, boolean administrador) {
         this.nombre = nombre;

@@ -13,38 +13,40 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Alumnos extends AppCompatActivity {
 
-    Adaptador adapter;
+    AdaptadorAlumnos adapter;
+    ArrayList<Usuario> listaAlumnos = new ArrayList(30);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alumnos);
 
-       /* FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference().child("pictorutinas").child("usuarios");
-
+        //Generación de listView
         ListView list = (ListView) findViewById(R.id.alumnosLV);
-        this.adapter = new Adaptador(this, this.listaRutinas);
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference().child("pictorutinas").child("usuarios");
 
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot data: dataSnapshot.getChildren()){
                     HashMap dataHash = (HashMap) data.getValue();
-                    String nombre = (String) dataHash.get("email");
-
+                    Usuario aux = new Usuario((String)dataHash.get("nombre"),(String)dataHash.get("email") ,(boolean)dataHash.get("administrador"));
+                    listaAlumnos.add(aux);
                 }
-
+                adapter = new AdaptadorAlumnos(Alumnos.this, listaAlumnos);
+                list.setAdapter(adapter);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });*/
-
+        });
     }
 }
