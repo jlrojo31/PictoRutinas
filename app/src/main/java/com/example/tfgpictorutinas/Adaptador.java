@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -54,30 +55,31 @@ public class Adaptador extends BaseAdapter {
 
         if(vi == null) {
             holder = new ViewHolder();
-            //todo esto debajo del else (problema de numero
-            LayoutInflater inflater = (LayoutInflater) activity
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            vi = inflater.inflate(R.layout.item_rutina, null);
 
-            holder.editText = (EditText) vi.findViewById(R.id.idnom);
-            holder.editText.setTag(position);
-            holder.editText.setText(rutinas.get(position).getNombre().toString());
-            holder.imageView = (ImageView) vi.findViewById(R.id.foto);
-            holder.imageView.setTag(position);
-            //holder.iresource failed to call closemage.setImageResource(); //todo revisar
-            vi.setTag(holder);
-            //fin todo esto debajo del else
         }else {
             holder = (ViewHolder) vi.getTag();
         }
 
+        //todo esto debajo del else (problema de numero
+        LayoutInflater inflater = (LayoutInflater) activity
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        vi = inflater.inflate(R.layout.item_rutina, null);
 
-        int tag_EditText_position=(Integer) holder.editText.getTag();
-        holder.editText.setId(tag_EditText_position);
+        holder.textView = (TextView) vi.findViewById(R.id.idnom);
+        holder.textView.setTag(position);
+        holder.textView.setText(rutinas.get(position).getNombre().toString());
+        holder.imageView = (ImageView) vi.findViewById(R.id.foto);
+        holder.imageView.setTag(position);
+        //holder.iresource failed to call closemage.setImageResource(); //todo revisar
+        vi.setTag(holder);
+        //fin todo esto debajo del else
+
+        int tag_EditText_position=(Integer) holder.textView.getTag();
+        holder.textView.setId(tag_EditText_position);
         int tag_ImageView_position=(Integer) holder.imageView.getTag();
         holder.imageView.setId(tag_ImageView_position);
 
-        holder.editText.addTextChangedListener(new TextWatcher() {
+        /*holder.editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before,
                                       int count) {
@@ -100,17 +102,17 @@ public class Adaptador extends BaseAdapter {
             public void afterTextChanged(Editable s) {
             }
 
-        });
+        });*/
 
-        holder.imageView.setOnClickListener(new View.OnClickListener() {
+        /*holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(holder.imageView.getContext(), RutinaDef.class);
-                i.putExtra("idRutina", holder.editText.getId());
-                i.putExtra("nombre", holder.editText.getText().toString());
+                i.putExtra("idRutina", holder.textView.getId());
+                i.putExtra("nombre", holder.textView.getText().toString());
                 holder.imageView.getContext().startActivity(i);
             }
-        });
+        });*/
 
         return vi;
     }
@@ -118,5 +120,5 @@ public class Adaptador extends BaseAdapter {
 
 class ViewHolder {
     ImageView imageView;
-    EditText editText;
+    TextView textView;
 }

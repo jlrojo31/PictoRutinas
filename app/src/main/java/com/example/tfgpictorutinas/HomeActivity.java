@@ -9,13 +9,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.tfgpictorutinas.R;
+import com.example.tfgpictorutinas.firebaseRDB.Usuario;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -28,6 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +42,13 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        //Generación de listView
+        ListView list = (ListView) findViewById(R.id.lista);
+        this.adapter = new Adaptador(this, this.listaRutinas);
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference().child("pictorutinas").child("rutinas");
 
         //MIO
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
@@ -59,19 +70,35 @@ public class HomeActivity extends AppCompatActivity {
         }
         //MIO
 
-        //Generación de listView
-        ListView list = (ListView) findViewById(R.id.lista);
-        this.adapter = new Adaptador(this, this.listaRutinas);
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot data: dataSnapshot.getChildren()){
+                    HashMap dataHash = (HashMap) data.getValue();
+                    Rutina aux = new Rutina((Long)dataHash.get("idRutina"),(String)dataHash.get("nombre") ,(String)dataHash.get("foto"));
+                    listaRutinas.add(aux);
+                }
+                adapter = new Adaptador(HomeActivity.this, listaRutinas);
+                list.setAdapter(adapter);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                View str = ((LinearLayout)arg1).getChildAt(1);
+                int id = ((TextView)str).getId();
+                String texto = ((TextView)str).getText().toString();
 
-                //Object o = listView.getItemAtPosition(position);
-                // Realiza lo que deseas, al recibir clic en el elemento de tu listView determinado por su posicion.
-                Toast.makeText(HomeActivity.this, "pulsado", Toast.LENGTH_SHORT).show();
-
+                Intent i = new Intent(HomeActivity.this, RutinaDef.class);
+                i.putExtra("idRutina", id);
+                i.putExtra("nombre", texto);
+                startActivity(i);
             }
         });
 
@@ -85,6 +112,7 @@ public class HomeActivity extends AppCompatActivity {
 
                 Rutina a = new Rutina(listaRutinas.size()+1,"Rutina" + (listaRutinas.size()+1), "" + R.drawable.alumno); //@todo Revisar
                 listaRutinas.add(a);
+                myRef.push().setValue(a);
                 list.setAdapter(adapter);
             }
         });
