@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/nav_camera"
+        android:title="Abrir Camara"/>
+    <item android:id="@+id/nav_album"
+        android:title="Abrir Album"/>
+    <item android:id="@+id/nav_araasac"
+        android:title="Abrir araasac"/>
+</menu>

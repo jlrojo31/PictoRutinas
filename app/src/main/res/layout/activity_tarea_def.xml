@@ -10,8 +10,9 @@
         android:id="@+id/fotoTareaDef"
         android:layout_width="250dp"
         android:layout_height="250dp"
-        android:layout_marginTop="80dp"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dp"
+        android:onClick="popupmenu"
         android:src="@drawable/alumno2" />
 
     <TextView
