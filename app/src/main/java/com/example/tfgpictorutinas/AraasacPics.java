@@ -125,7 +125,7 @@ public class AraasacPics extends AppCompatActivity {
                 case R.id.tvImagen5:
                 case R.id.tvImagen6:
                 case R.id.tvImagen7:
-                    Intent i = new Intent(AraasacPics.this, TareaDef.class);
+                    Intent i = new Intent();
                     Bundle extras = getIntent().getExtras();
                     ImageView imgView = findViewById(v.getId());
                     Bitmap bitmap = ((BitmapDrawable) imgView.getDrawable()).getBitmap();
