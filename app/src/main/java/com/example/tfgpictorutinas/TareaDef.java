@@ -6,46 +6,55 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
+import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.format.Time;
 import android.util.Base64;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class TareaDef extends AppCompatActivity {
 
-    //variables camara
+    //variables picto(foto,archivo,picto)
     Uri imagenUri;
-
+    ImageView picto;
     int TOMAR_FOTO = 100;
     int SELEC_IMAGEN = 200;
 
-    String CARPETA_RAIZ = "MisFotosApp";
-    String CARPETAS_IMAGENES = "imagenes";
-    String RUTA_IMAGEN = CARPETA_RAIZ + CARPETAS_IMAGENES;
-    String path;
-
-    ImageView picto;
-
+    int ARRASAC = 300;
+    // VARIABLES RELOJ
+    TimePickerDialog dialogoTiempo;
+    TextView hora;
+    EditText et_descripcion;
+    private static  String KEY_HORA= "HH:mm a";
+    private static  String KEY_DESCRIPCION= "descripcion araasac";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +63,8 @@ public class TareaDef extends AppCompatActivity {
         String imagen;
         Bundle extras = getIntent().getExtras();
         picto = findViewById(R.id.fotoTareaDef);
-
+        hora = findViewById(R.id.tiempoTareaDef);
+        et_descripcion = findViewById(R.id.EtDescripcionTareaDef);
         if (extras!=null) {
             nombre = extras.getString("idpicto");
             imagen = extras.getString("imagen");
@@ -64,14 +74,14 @@ public class TareaDef extends AppCompatActivity {
             }
         }
 
-        if(ContextCompat.checkSelfPermission(TareaDef.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(TareaDef.this,
-                    new String[]{Manifest.permission.CAMERA,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE},0);
+        if (savedInstanceState !=null){
+            String saveddescripcion = savedInstanceState.getString(KEY_DESCRIPCION);
+            et_descripcion.setText(saveddescripcion);
+            String savedHora = savedInstanceState.getString(KEY_HORA);
+            hora.setText(savedHora);
+        }else {
+            setHoraActual();
         }
-
-
-
         // onclick listener para la imagen del pictograma.
         /*picto.setOnClickListener(new View.OnClickListener() {
 
@@ -81,12 +91,57 @@ public class TareaDef extends AppCompatActivity {
                 startActivity(i);
             }
         });*/
-
+    }
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putString(KEY_HORA, hora.getText().toString());
+        super.onSaveInstanceState(savedInstanceState);
     }
 
+    private void setHoraActual() {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat Hora = new SimpleDateFormat("hh");
+        SimpleDateFormat minuto = new SimpleDateFormat("mm");
+        SimpleDateFormat am_pm = new SimpleDateFormat("a");
+        String HH = Hora.format(calendar.getTime());
+        String min = minuto.format(calendar.getTime());
+        String a = am_pm.format(calendar.getTime());
+        hora.setText(HH+":"+min+" "+a);
+    }
+
+
+    public void abrirTimePicker(View v) {
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, android.R.style.Theme_Holo_Light_Dialog,new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+                String am_pm = "AM";
+                if(hour>12){
+                    am_pm = "PM";
+                    hour = hour-12;
+                }
+                //Showing the picked value in the textView
+                //hora.setText(String.valueOf(hour)+ ":"+String.valueOf(minute)+" "+am_pm);
+                String time = hour+ ":"+minute+" "+am_pm;
+                hora.setText(time);
+            }
+        }, 12, 30, false);
+
+        timePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        timePickerDialog.show();
+    }
+    public void pedirPermisosCamara(){
+        if(ContextCompat.checkSelfPermission(TareaDef.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(TareaDef.this,
+                    new String[]{Manifest.permission.CAMERA,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE},0);
+        }
+    }
+    //Menu popup de imagen
     public void popupmenu(View v) {
         ImageView picto = findViewById(R.id.fotoTareaDef);
         PopupMenu popup = new PopupMenu(this, picto);
+        pedirPermisosCamara();
         popup.getMenuInflater().inflate(R.menu.popup_menu,popup.getMenu());
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener(){
             @Override
@@ -102,8 +157,8 @@ public class TareaDef extends AppCompatActivity {
                         Toast.makeText(TareaDef.this, "Abriendo Album", Toast.LENGTH_SHORT).show();
                         return true;
                     case R.id.nav_araasac:
-                        Intent i = new Intent(TareaDef.this, AraasacPics.class);
-                        startActivity(i);
+                        Intent araasac = new Intent(TareaDef.this, AraasacPics.class);
+                        startActivityForResult(araasac, ARRASAC);
                         return true;
                 }
                 return false;
@@ -127,6 +182,8 @@ public class TareaDef extends AppCompatActivity {
         startActivityForResult(galeria,SELEC_IMAGEN);
     }
 
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -135,6 +192,8 @@ public class TareaDef extends AppCompatActivity {
             imagenUri = data.getData();
             picto.setImageURI(imagenUri);
         } else if(resultCode == RESULT_OK && requestCode == TOMAR_FOTO) {
+            picto.setImageURI(imagenUri);
+        }else if(resultCode == RESULT_OK && requestCode == ARRASAC) {
             picto.setImageURI(imagenUri);
         }
     }
