@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -111,36 +112,16 @@ public class TareaDef extends AppCompatActivity {
         popup.show();
     }
 
-    // la imagen de camara no se muestra donde deberia pero si enra a la camara
     public void tomarFoto(){
-        String nombreImagen="";
-        File fileImagen = new  File(Environment.getExternalStorageDirectory(), RUTA_IMAGEN);
-        boolean isCreada = fileImagen.exists();
-
-        if(isCreada == false){
-            isCreada = fileImagen.mkdirs();
-        }
-
-        if(isCreada == true){
-            nombreImagen = (System.currentTimeMillis()/1000+".jpg");
-        }
-
-        path = Environment.getExternalStorageDirectory()+File.separator+RUTA_IMAGEN+File.separator+nombreImagen;
-        File imagen = new File(path);
-
-        Intent intent = null;
-        intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
-            String authorities = this.getPackageName()+".provider";
-            Uri imageUri = FileProvider.getUriForFile(this, authorities,imagen);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-        } else {
-            intent.putExtra(MediaStore.EXTRA_OUTPUT,Uri.fromFile(imagen));
-        }
-
-        startActivityForResult(intent,TOMAR_FOTO);
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, "New Picture");
+        values.put(MediaStore.Images.Media.DESCRIPTION, "From the Camera");
+        imagenUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        //Camera intent
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imagenUri);
+        startActivityForResult(cameraIntent, TOMAR_FOTO);
     }
-
     public void seleccionarImagen(){
         Intent galeria = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(galeria,SELEC_IMAGEN);
@@ -154,15 +135,7 @@ public class TareaDef extends AppCompatActivity {
             imagenUri = data.getData();
             picto.setImageURI(imagenUri);
         } else if(resultCode == RESULT_OK && requestCode == TOMAR_FOTO) {
-            MediaScannerConnection.scanFile(TareaDef.this, new String[]{path}, null, new MediaScannerConnection.OnScanCompletedListener() {
-                @Override
-                public void onScanCompleted(String s, Uri uri) {
-
-                }
-            });
-
-            Bitmap bitmap = BitmapFactory.decodeFile(path);
-            picto.setImageBitmap(bitmap);
+            picto.setImageURI(imagenUri);
         }
     }
 }
