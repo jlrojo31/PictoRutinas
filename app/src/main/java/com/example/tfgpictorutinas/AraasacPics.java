@@ -138,7 +138,9 @@ public class AraasacPics extends AppCompatActivity {
                         i.putExtra("idPicto", v.getTooltipText());
                     }
                     i.putExtra("imagen", encode);
-                    startActivity(i);
+                    setResult(RESULT_OK, i);
+                    finish();
+
                     break;
                 default:
                     break;

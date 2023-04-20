@@ -48,40 +48,22 @@ public class TareaDef extends AppCompatActivity {
     int TOMAR_FOTO = 100;
     int SELEC_IMAGEN = 200;
 
+    Bundle extras;
     int ARRASAC = 300;
-    // VARIABLES RELOJ
-    TimePickerDialog dialogoTiempo;
+
     TextView hora;
     EditText et_descripcion;
-    private static  String KEY_HORA= "HH:mm a";
-    private static  String KEY_DESCRIPCION= "descripcion araasac";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tarea_def);
-        String nombre;
-        String imagen;
-        Bundle extras = getIntent().getExtras();
+
+        extras = getIntent().getExtras();
         picto = findViewById(R.id.fotoTareaDef);
         hora = findViewById(R.id.tiempoTareaDef);
         et_descripcion = findViewById(R.id.EtDescripcionTareaDef);
-        if (extras!=null) {
-            nombre = extras.getString("idpicto");
-            imagen = extras.getString("imagen");
-            if (imagen!=null) {
-                byte[] imageAsBytes = Base64.decode(imagen, Base64.DEFAULT);
-                picto.setImageBitmap((BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length)));
-            }
-        }
+        setHoraActual();
 
-        if (savedInstanceState !=null){
-            String saveddescripcion = savedInstanceState.getString(KEY_DESCRIPCION);
-            et_descripcion.setText(saveddescripcion);
-            String savedHora = savedInstanceState.getString(KEY_HORA);
-            hora.setText(savedHora);
-        }else {
-            setHoraActual();
-        }
         // onclick listener para la imagen del pictograma.
         /*picto.setOnClickListener(new View.OnClickListener() {
 
@@ -92,12 +74,6 @@ public class TareaDef extends AppCompatActivity {
             }
         });*/
     }
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putString(KEY_HORA, hora.getText().toString());
-        super.onSaveInstanceState(savedInstanceState);
-    }
-
     private void setHoraActual() {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat Hora = new SimpleDateFormat("hh");
@@ -149,16 +125,12 @@ public class TareaDef extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.nav_camera:
                         tomarFoto();
-                        Toast.makeText(TareaDef.this, "Abriendo Camara", Toast.LENGTH_SHORT).show();
-                        //cosas que hace
                         return true;
                     case R.id.nav_album:
                         seleccionarImagen();
-                        Toast.makeText(TareaDef.this, "Abriendo Album", Toast.LENGTH_SHORT).show();
                         return true;
                     case R.id.nav_araasac:
-                        Intent araasac = new Intent(TareaDef.this, AraasacPics.class);
-                        startActivityForResult(araasac, ARRASAC);
+                        seleccionarARAASAC();
                         return true;
                 }
                 return false;
@@ -181,7 +153,10 @@ public class TareaDef extends AppCompatActivity {
         Intent galeria = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(galeria,SELEC_IMAGEN);
     }
-
+    public void seleccionarARAASAC(){
+        Intent araasac = new Intent(TareaDef.this, AraasacPics.class);
+        startActivityForResult(araasac, ARRASAC);
+    }
 
 
     @Override
@@ -194,6 +169,17 @@ public class TareaDef extends AppCompatActivity {
         } else if(resultCode == RESULT_OK && requestCode == TOMAR_FOTO) {
             picto.setImageURI(imagenUri);
         }else if(resultCode == RESULT_OK && requestCode == ARRASAC) {
+            if (extras!=null) {
+                String nombre;
+                String imagen;
+                nombre = data.getStringExtra("idpicto");
+                imagen = data.getStringExtra("imagen");
+
+                if (imagen!=null) {
+                    byte[] imageAsBytes = Base64.decode(imagen, Base64.DEFAULT);
+                    picto.setImageBitmap((BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length)));
+                }
+            }
             picto.setImageURI(imagenUri);
         }
     }
