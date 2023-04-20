@@ -38,6 +38,7 @@ import java.util.Map;
 public class HomeActivity extends AppCompatActivity {
     Adaptador adapter;
     ArrayList<Rutina> listaRutinas = new ArrayList(30);
+    long autoincrementid = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +79,7 @@ public class HomeActivity extends AppCompatActivity {
                     Rutina aux = new Rutina((Long)dataHash.get("idRutina"),(String)dataHash.get("nombre") ,(String)dataHash.get("foto"));
                     listaRutinas.add(aux);
                 }
+                if (listaRutinas.size() > 0) autoincrementid = ((Rutina)listaRutinas.get(listaRutinas.size()-1)).getIdRutina();
                 adapter = new Adaptador(HomeActivity.this, listaRutinas);
                 list.setAdapter(adapter);
             }
@@ -87,12 +89,31 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        myRef.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Rutina> lR = new ArrayList(30);
+                for(DataSnapshot data: snapshot.getChildren()){
+                    HashMap dataHash = (HashMap) data.getValue();
+                    Rutina aux = new Rutina((Long)dataHash.get("idRutina"),(String)dataHash.get("nombre") ,(String)dataHash.get("foto"));
+                    lR.add(aux);
+                }
+                if (lR.size() > 0) autoincrementid = ((Rutina)lR.get(lR.size()-1)).getIdRutina();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
                 View str = ((LinearLayout)arg1).getChildAt(1);
-                int id = ((TextView)str).getId();
+                Rutina aux = listaRutinas.get(position);
+                long id = aux.getIdRutina();
                 String texto = ((TextView)str).getText().toString();
 
                 Intent i = new Intent(HomeActivity.this, RutinaDef.class);
@@ -110,7 +131,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Rutina a = new Rutina(listaRutinas.size()+1,"Rutina" + (listaRutinas.size()+1), "" + R.drawable.alumno); //@todo Revisar
+                Rutina a = new Rutina(autoincrementid+1,"Rutina" + (autoincrementid+1), "" + R.drawable.alumno); //@todo Revisar
                 listaRutinas.add(a);
                 myRef.push().setValue(a);
                 list.setAdapter(adapter);

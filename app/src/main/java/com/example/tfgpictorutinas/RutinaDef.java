@@ -34,7 +34,7 @@ public class RutinaDef extends AppCompatActivity {
                 Intent i = new Intent(RutinaDef.this, EditorTareas.class);
                 Bundle extras = getIntent().getExtras();
                 if (extras!=null) {
-                    i.putExtra("idRutina", extras.getInt("idRutina"));
+                    i.putExtra("idRutina", extras.getLong("idRutina"));
                     i.putExtra("nombre", extras.getString("nombre"));
                 }
                 startActivity(i);
