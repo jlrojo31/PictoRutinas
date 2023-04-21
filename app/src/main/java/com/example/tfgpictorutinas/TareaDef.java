@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -35,7 +36,10 @@ import android.widget.Toast;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.text.DateFormat;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -47,46 +51,91 @@ public class TareaDef extends AppCompatActivity {
     ImageView picto;
     int TOMAR_FOTO = 100;
     int SELEC_IMAGEN = 200;
-
-    Bundle extras;
     int ARRASAC = 300;
+    Bundle extras;
+    String HORA ;
 
-    TextView hora;
+    TextView hora_ini;
+    TextView hora_end;
     EditText et_descripcion;
+    Button btn_actualizar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tarea_def);
 
         extras = getIntent().getExtras();
+        //variables de la vista
+
         picto = findViewById(R.id.fotoTareaDef);
-        hora = findViewById(R.id.tiempoTareaDef);
+
+        hora_ini = findViewById(R.id.tiempoTareaDef_ini);
+        hora_end = findViewById(R.id.tiempoTareaDef_end);
+
         et_descripcion = findViewById(R.id.EtDescripcionTareaDef);
+        btn_actualizar = findViewById(R.id.idBtActualizarTarea);
+
         setHoraActual();
-
-        // onclick listener para la imagen del pictograma.
-        /*picto.setOnClickListener(new View.OnClickListener() {
-
+        hora_ini.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(TareaDef.this, AraasacPics.class);
-                startActivity(i);
+                abrirTimePicker(v,hora_ini);
             }
-        });*/
+        });
+        hora_end.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                abrirTimePicker(v,hora_end);
+            }
+        });
+
+        // onclick listener para la imagen del pictograma.
+        btn_actualizar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                String descripcion = et_descripcion.getText().toString().trim();
+                String aDate = hora_ini.getText().toString();
+
+            }
+        });
+    }
+    private void  guardardata(ImageView picto, TextView hora_end, TextView hora_ini, EditText et_descripcion,String rutina){
+        String tarea_picto= getBitstreamPicto( picto);
+        String tarea_hora_ini= hora_ini.getText().toString();
+        String tarea_hora_end= hora_end.getText().toString();
+        String tarea_descripcion= et_descripcion.getText().toString();
+        if(tarea_picto.isEmpty() ||  tarea_hora_ini.isEmpty() || tarea_hora_end.isEmpty() || tarea_descripcion.isEmpty() || rutina.isEmpty()){
+            String error = "";
+            if (tarea_picto.isEmpty())
+                error="PICTOGRAMA";
+            if (tarea_picto.isEmpty())
+                error="HORA DE INICIO";
+            if (tarea_picto.isEmpty())
+                error="HORA DE FINALIZACIÓN";
+            if (tarea_picto.isEmpty())
+                error="DESCRIPCION";
+            if (tarea_picto.isEmpty())
+                error="RUTINA";
+            Toast.makeText(this,"Falta"+error+" datos por definir",Toast.LENGTH_SHORT).show();
+        }
+    }
+    private String getBitstreamPicto(ImageView picto){
+        Bitmap bitmap = ((BitmapDrawable) picto.getDrawable()).getBitmap();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100,byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+        String pic = Base64.encodeToString(byteArray,Base64.DEFAULT);
+        return pic;
     }
     private void setHoraActual() {
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat Hora = new SimpleDateFormat("hh");
-        SimpleDateFormat minuto = new SimpleDateFormat("mm");
-        SimpleDateFormat am_pm = new SimpleDateFormat("a");
-        String HH = Hora.format(calendar.getTime());
-        String min = minuto.format(calendar.getTime());
-        String a = am_pm.format(calendar.getTime());
-        hora.setText(HH+":"+min+" "+a);
+        Date date = new Date(String.valueOf(Calendar.getInstance().getTime()));
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm a");
+        hora_ini.setText(dateFormat.format(date));
+        hora_end.setText(dateFormat.format(date));
     }
-
-
-    public void abrirTimePicker(View v) {
+    public void abrirTimePicker(View v, TextView hour_) {
         TimePickerDialog timePickerDialog = new TimePickerDialog(this, android.R.style.Theme_Holo_Light_Dialog,new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int minute) {
@@ -97,8 +146,8 @@ public class TareaDef extends AppCompatActivity {
                 }
                 //Showing the picked value in the textView
                 //hora.setText(String.valueOf(hour)+ ":"+String.valueOf(minute)+" "+am_pm);
-                String time = hour+ ":"+minute+" "+am_pm;
-                hora.setText(time);
+                String hora = hour+ ":"+minute+" "+am_pm;
+                hour_.setText(hora);
             }
         }, 12, 30, false);
 
@@ -138,7 +187,6 @@ public class TareaDef extends AppCompatActivity {
         });
         popup.show();
     }
-
     public void tomarFoto(){
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE, "New Picture");
@@ -157,8 +205,6 @@ public class TareaDef extends AppCompatActivity {
         Intent araasac = new Intent(TareaDef.this, AraasacPics.class);
         startActivityForResult(araasac, ARRASAC);
     }
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -169,18 +215,12 @@ public class TareaDef extends AppCompatActivity {
         } else if(resultCode == RESULT_OK && requestCode == TOMAR_FOTO) {
             picto.setImageURI(imagenUri);
         }else if(resultCode == RESULT_OK && requestCode == ARRASAC) {
-            if (extras!=null) {
-                String nombre;
                 String imagen;
-                nombre = data.getStringExtra("idpicto");
                 imagen = data.getStringExtra("imagen");
-
                 if (imagen!=null) {
                     byte[] imageAsBytes = Base64.decode(imagen, Base64.DEFAULT);
                     picto.setImageBitmap((BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length)));
                 }
-            }
-            picto.setImageURI(imagenUri);
         }
     }
 }

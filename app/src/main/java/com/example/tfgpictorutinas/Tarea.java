@@ -4,11 +4,21 @@ public class Tarea {
     long idTarea;
     String nombreTarea;
     String fotoTarea;
+    String hora_ini;
+    String hora_end;
+    String rutina_id;
 
-    public Tarea(long idTarea, String nombreTarea, String fotoTarea) {
+    public Tarea(long idTarea) {
+        this.idTarea = idTarea;
+    }
+
+    public Tarea(long idTarea, String nombreTarea, String fotoTarea,String hora_ini, String hora_end, String rutina_id) {
         this.idTarea = idTarea;
         this.nombreTarea = nombreTarea;
         this.fotoTarea = fotoTarea;
+        this.hora_ini = hora_ini;
+        this.hora_end = hora_end;
+        this.rutina_id = rutina_id;
     }
 
     public long getIdTarea() {

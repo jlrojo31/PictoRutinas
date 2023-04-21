@@ -21,56 +21,86 @@
         android:layout_height="40dp"
         android:padding="12dp"
         android:text="Descripción"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="30dp"
         android:layout_centerHorizontal="true"
         android:textColor="@color/grey"
         android:textSize="15sp"
         android:layout_below="@id/fotoTareaDef"
         tools:ignore="MissingConstraints" />
+    <TextView
+        android:id="@+id/textotiempo_ini"
+        android:layout_width="350dp"
+        android:layout_height="40dp"
+        android:padding="12dp"
+        android:text="Hora comienzo tarea:"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/grey"
+        android:textSize="15sp"
+        android:layout_below="@id/EtDescripcionTareaDef"
+        tools:ignore="MissingConstraints" />
+    <TextView
+        android:id="@+id/textotiempo_end"
+        android:layout_width="350dp"
+        android:layout_height="40dp"
+        android:padding="12dp"
+        android:text="Hora finalización tarea:"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/grey"
+        android:textSize="15sp"
+        android:layout_below="@id/tiempoTareaDef_ini"
+        tools:ignore="MissingConstraints" />
 
     <EditText
         android:id="@+id/EtDescripcionTareaDef"
-        android:layout_width="370dp"
+        android:layout_width="340dp"
         android:layout_height="50dp"
         android:padding="10dp"
         android:hint="Introduzca descripción"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/custom_background"
         android:textColor="@color/black"
         android:singleLine="true"
         android:textSize="20sp"
-        android:backgroundTint="@color/grey"
         android:layout_below="@id/textodescricionTareaDef"
         tools:ignore="MissingConstraints" />
 
     <TextView
-        android:id="@+id/tiempoTareaDef"
+        android:id="@+id/tiempoTareaDef_ini"
         android:layout_width="270dp"
-        android:layout_height="70dp"
-        android:layout_below="@id/EtDescripcionTareaDef"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="30dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="50dp"
         android:hint="00:00"
         android:inputType="time"
-        android:onClick="abrirTimePicker"
+        android:layout_below="@id/textotiempo_ini"
         android:textColor="@color/grey"
-        android:textSize="50dp"
+        android:textSize="25dp"
         tools:ignore="MissingConstraints" />
-
+    <TextView
+        android:id="@+id/tiempoTareaDef_end"
+        android:layout_width="270dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="50dp"
+        android:hint="00:00"
+        android:inputType="time"
+        android:layout_below="@id/textotiempo_end"
+        android:textColor="@color/grey"
+        android:textSize="25dp"
+        tools:ignore="MissingConstraints" />
 
 
     <Button
         android:id="@+id/idBtActualizarTarea"
         android:layout_width="240dp"
         android:layout_height="55dp"
+        android:layout_below="@id/tiempoTareaDef_end"
         android:layout_centerHorizontal="true"
-        android:text="Actualizar"
-        android:textSize="15dp"
-        android:textColor="@color/black"
-        android:textAllCaps="false"
+        android:layout_marginTop="20dp"
         android:backgroundTint="@color/grey"
-        android:layout_below="@id/tiempoTareaDef"
-        android:layout_marginTop="30dp" />
+        android:text="Actualizar"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        android:textSize="15dp" />
 
 
 </RelativeLayout>

@@ -64,7 +64,7 @@ public class EditorTareas extends AppCompatActivity {
                         for(DataSnapshot data: dataSnapshot.getChildren()){
                             int orden = 0;
                             HashMap dataHash = (HashMap) data.getValue();
-                            Tarea aux = new Tarea((Long)dataHash.get("idTarea"),(String)dataHash.get("nombreTarea") ,(String)dataHash.get("fotoTarea"));
+                            Tarea aux = new Tarea((Long)dataHash.get("idTarea"),(String)dataHash.get("nombreTarea") ,(String)dataHash.get("fotoTarea"),(String)dataHash.get("hora_ini"),(String)dataHash.get("hora_end"),(String) dataHash.get("rutina"));
                             if (tareasOrden.containsKey((Long)dataHash.get("idTarea"))) {
                                 orden = tareasOrden.get((Long)dataHash.get("idTarea")).intValue();
                                 listaTareas.add(orden, aux);
@@ -96,7 +96,7 @@ public class EditorTareas extends AppCompatActivity {
                 ArrayList<Tarea> lR = new ArrayList(30);
                 for(DataSnapshot data: snapshot.getChildren()){
                     HashMap dataHash = (HashMap) data.getValue();
-                    Tarea aux = new Tarea((Long)dataHash.get("idTarea"),(String)dataHash.get("nombreTarea") ,(String)dataHash.get("fotoTarea"));
+                    Tarea aux = new Tarea((Long)dataHash.get("idTarea"),(String)dataHash.get("nombreTarea") ,(String)dataHash.get("fotoTarea"),(String)dataHash.get("hora_ini"),(String)dataHash.get("hora_end"),(String) dataHash.get("rutina"));
                     lR.add(aux);
                 }
                 if (lR.size()>0) autoincrementid = ((Tarea)lR.get(lR.size()-1)).getIdTarea();
@@ -116,7 +116,7 @@ public class EditorTareas extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String a = "SS";
-                Tarea t = new Tarea(autoincrementid+1,"Tarea" + (autoincrementid+1), "" + R.drawable.alumno); //@todo Revisar
+                Tarea t = new Tarea(autoincrementid+1,"Tarea" + (autoincrementid+1), "" + R.drawable.alumno,"g","",""); //@todo Revisar
                 listaTareas.add(t);
                 int tam = listaTareas.size();
                 myRefTareas.push().setValue(t);
