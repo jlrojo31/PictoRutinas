@@ -41,5 +41,21 @@ public class RutinaDef extends AppCompatActivity {
             }
         });
 
+        Button participantesBtn = findViewById(R.id.idBtParticipantes);
+
+        // onclick listener para el boton editar tarea.
+        participantesBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(RutinaDef.this, Participantes.class);
+                Bundle extras = getIntent().getExtras();
+                if (extras!=null) {
+                    i.putExtra("idRutina", extras.getLong("idRutina"));
+                    i.putExtra("nombre", extras.getString("nombre"));
+                }
+                startActivity(i);
+            }
+        });
+
     }
 }
