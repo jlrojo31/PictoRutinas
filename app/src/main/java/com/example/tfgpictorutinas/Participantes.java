@@ -38,6 +38,8 @@ public class Participantes extends AppCompatActivity {
     DatabaseReference myRef = database.getReference().child("pictorutinas").child("usuarios");
     DatabaseReference refUsuRutinas = database.getReference().child("pictorutinas").child("usuariosrutinas");
 
+    ArrayList usuariosRutinas = new ArrayList<String>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +61,7 @@ public class Participantes extends AppCompatActivity {
                 String texto = ((TextView)view).getText().toString();
 
                 UsuariosRutinas usuRut = new UsuariosRutinas(texto, idRutina);
+
 
                 refUsuRutinas.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -100,23 +103,40 @@ public class Participantes extends AppCompatActivity {
             }
         });
 
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        refUsuRutinas.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot data: dataSnapshot.getChildren()){
                     HashMap dataHash = (HashMap) data.getValue();
-                    Usuario aux = new Usuario((String)dataHash.get("nombre"),(String)dataHash.get("email") ,(boolean)dataHash.get("administrador"));
-                    arrayParticipantes.add(aux.getNombre());
+                    usuariosRutinas.add(dataHash.get("idNombre"));
                 }
-                adapter = new ArrayAdapter<String>(Participantes.this, android.R.layout.simple_list_item_multiple_choice,arrayParticipantes);
-                listViewParticipantes.setAdapter(adapter);
-                //listViewParticipantes.setItemChecked(1,true); //Todo falta cargar los datos con los check.
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for(DataSnapshot data: dataSnapshot.getChildren()){
+                            HashMap dataHash = (HashMap) data.getValue();
+                            Usuario aux = new Usuario((String)dataHash.get("nombre"),(String)dataHash.get("email") ,(boolean)dataHash.get("administrador"));
+                            arrayParticipantes.add(aux.getNombre());
+                        }
+                        adapter = new ArrayAdapter<String>(Participantes.this, android.R.layout.simple_list_item_multiple_choice,arrayParticipantes);
+                        listViewParticipantes.setAdapter(adapter);
+                        for (int i=0;i<arrayParticipantes.size();i++) {
+                            if (usuariosRutinas.contains(arrayParticipantes.get(i).toString()+ String.valueOf(idRutina)))
+                                listViewParticipantes.setItemChecked(i,true);
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
+
 
 
     }

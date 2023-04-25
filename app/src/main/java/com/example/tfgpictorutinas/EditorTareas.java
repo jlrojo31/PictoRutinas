@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -18,12 +19,14 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 public class EditorTareas extends AppCompatActivity {
     private TextView tvNombre;
     AdaptadorTareas adapter;
-    ArrayList<Tarea> listaTareas = new ArrayList(30);
+    ArrayList<Tarea> listaTareas = new ArrayList<>(50);
     ArrayList<RutinasTareas> listaRutinasTareas = new ArrayList(30);
+    TreeMap listaTareasHash = new TreeMap<Integer,Tarea>();
     long autoincrementid = 0;
     long idRutina = 0;
 
@@ -67,10 +70,12 @@ public class EditorTareas extends AppCompatActivity {
                             Tarea aux = new Tarea((Long)dataHash.get("idTarea"),(String)dataHash.get("nombreTarea") ,(String)dataHash.get("fotoTarea"),(String)dataHash.get("hora_ini"),(String)dataHash.get("hora_end"),(String) dataHash.get("rutina"));
                             if (tareasOrden.containsKey((Long)dataHash.get("idTarea"))) {
                                 orden = tareasOrden.get((Long)dataHash.get("idTarea")).intValue();
-                                listaTareas.add(orden, aux);
+                                listaTareasHash.put(orden, aux);
                             }
+                            listaTareas = new ArrayList<Tarea>(listaTareasHash.values());
                             if ((Long)dataHash.get("idTarea") > autoincrementid) autoincrementid = (Long)dataHash.get("idTarea");
                         }
+                        listaTareas = new ArrayList<Tarea>(listaTareasHash.values());
                         /*if (listaTareas.size() > 0) autoincrementid = ((Tarea)listaTareas.get(listaTareas.size()-1)).getIdTarea();*/
                         adapter = new AdaptadorTareas(EditorTareas.this, listaTareas);
                         list.setAdapter(adapter);
