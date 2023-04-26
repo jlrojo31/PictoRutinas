@@ -124,7 +124,8 @@ public class EditorTareas extends AppCompatActivity {
                 Tarea t = new Tarea(autoincrementid+1,"Tarea" + (autoincrementid+1), "" + R.drawable.alumno,"g","",""); //@todo Revisar
                 listaTareas.add(t);
                 int tam = listaTareas.size();
-                myRefTareas.push().setValue(t);
+                myRefTareas.child(String.valueOf(autoincrementid+1)).setValue(t);
+                //myRefTareas.push().setValue(t);
                 RutinasTareas rT = new RutinasTareas(idRutina,autoincrementid+1,tam-1);
                 refRT.push().setValue(rT);
                 list.setAdapter(adapter);

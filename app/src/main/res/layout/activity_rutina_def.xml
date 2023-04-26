@@ -62,19 +62,6 @@
         android:layout_below="@id/idBtParticipantes"
         android:layout_marginTop="30dp" />
 
-    <Button
-        android:id="@+id/idBtAniadirTarea"
-        android:layout_width="340dp"
-        android:layout_height="55dp"
-        android:layout_centerHorizontal="true"
-        android:text="@string/añadirtarea"
-        android:textSize="15dp"
-        android:textColor="@color/grey"
-        android:textAllCaps="false"
-        android:drawableLeft="@drawable/plus_circle_outline"
-        android:backgroundTint="@color/white"
-        android:layout_below="@id/idBtRepeticiones"
-        android:layout_marginTop="30dp" />
 
     <Button
         android:id="@+id/idBtEliminarRutina"
@@ -87,8 +74,89 @@
         android:textAllCaps="false"
         android:drawableLeft="@drawable/delete_outline"
         android:backgroundTint="@color/white"
-        android:layout_below="@id/idBtAniadirTarea"
+        android:layout_below="@id/idBtRepeticiones"
         android:layout_marginTop="30dp" />
 
+    <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/idGlRepeticiones"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:padding="15dp"
+        android:layout_below="@id/idBtEliminarRutina"
+        android:background="@color/material_dynamic_neutral90"
+        android:visibility="gone">
+
+        <CheckBox
+            android:id="@+id/idCbLunes"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_row="1"
+            android:checked="false"
+            android:text="Lunes"
+            android:onClick="checkone"/>
+
+        <CheckBox
+            android:id="@+id/idCbMartes"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_row="2"
+            android:checked="false"
+            android:text="Martes"
+            android:onClick="checkone"/>
+
+        <CheckBox
+            android:id="@+id/idCbMiercoles"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_row="3"
+            android:checked="false"
+            android:text="Miercoles"
+            android:onClick="checkone"/>
+
+        <CheckBox
+            android:id="@+id/idCbJueves"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="1"
+            android:checked="false"
+            android:text="Jueves"
+            android:onClick="checkone"/>
+
+        <CheckBox
+            android:id="@+id/idCbViernes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="2"
+            android:checked="false"
+            android:text="Viernes"
+            android:onClick="checkone"/>
+
+        <CheckBox
+            android:id="@+id/idCbSabado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="3"
+            android:checked="false"
+            android:text="Sabado"
+            android:onClick="checkone"/>
+
+        <CheckBox
+            android:id="@+id/idCbDomingo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_row="1"
+            android:checked="false"
+            android:text="Domingo"
+            android:onClick="checkone"/>
+    </GridLayout>
 
 </RelativeLayout>

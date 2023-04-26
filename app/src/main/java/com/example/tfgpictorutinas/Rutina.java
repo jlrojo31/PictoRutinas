@@ -5,10 +5,13 @@ public class Rutina {
     String nombre;
     String foto;
 
-    public Rutina(long idRutina, String nombre, String foto){
+    String repeticiones;
+
+    public Rutina(long idRutina, String nombre, String foto, String repeticiones){
         this.idRutina=idRutina;
         this.nombre=nombre;
         this.foto=foto;
+        this.repeticiones=repeticiones;
     }
 
     public long getIdRutina() {
@@ -33,5 +36,13 @@ public class Rutina {
 
     public void setFoto(String foto) {
         this.foto = foto;
+    }
+
+    public String getRepeticiones() {
+        return repeticiones;
+    }
+
+    public void setRepeticiones(String repeticiones) {
+        this.repeticiones = repeticiones;
     }
 }

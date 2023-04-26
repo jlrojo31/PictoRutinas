@@ -44,6 +44,8 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        getIntent().setAction("Already created");
+
         //Generación de listView
         ListView list = (ListView) findViewById(R.id.lista);
         this.adapter = new Adaptador(this, this.listaRutinas);
@@ -76,7 +78,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot data: dataSnapshot.getChildren()){
                     HashMap dataHash = (HashMap) data.getValue();
-                    Rutina aux = new Rutina((Long)dataHash.get("idRutina"),(String)dataHash.get("nombre") ,(String)dataHash.get("foto"));
+                    Rutina aux = new Rutina((Long)dataHash.get("idRutina"),(String)dataHash.get("nombre") ,(String)dataHash.get("foto"), (String)dataHash.get("repeticiones"));
                     listaRutinas.add(aux);
                 }
                 if (listaRutinas.size() > 0) autoincrementid = ((Rutina)listaRutinas.get(listaRutinas.size()-1)).getIdRutina();
@@ -96,7 +98,7 @@ public class HomeActivity extends AppCompatActivity {
                 ArrayList<Rutina> lR = new ArrayList(30);
                 for(DataSnapshot data: snapshot.getChildren()){
                     HashMap dataHash = (HashMap) data.getValue();
-                    Rutina aux = new Rutina((Long)dataHash.get("idRutina"),(String)dataHash.get("nombre") ,(String)dataHash.get("foto"));
+                    Rutina aux = new Rutina((Long)dataHash.get("idRutina"),(String)dataHash.get("nombre") ,(String)dataHash.get("foto"), (String)dataHash.get("repeticiones"));
                     lR.add(aux);
                 }
                 if (lR.size() > 0) autoincrementid = ((Rutina)lR.get(lR.size()-1)).getIdRutina();
@@ -115,10 +117,12 @@ public class HomeActivity extends AppCompatActivity {
                 Rutina aux = listaRutinas.get(position);
                 long id = aux.getIdRutina();
                 String texto = ((TextView)str).getText().toString();
+                String repeticiones = aux.getRepeticiones();
 
                 Intent i = new Intent(HomeActivity.this, RutinaDef.class);
                 i.putExtra("idRutina", id);
                 i.putExtra("nombre", texto);
+                i.putExtra("repeticiones",repeticiones);
                 startActivity(i);
             }
         });
@@ -131,9 +135,9 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Rutina a = new Rutina(autoincrementid+1,"Rutina" + (autoincrementid+1), "" + R.drawable.alumno); //@todo Revisar
+                Rutina a = new Rutina(autoincrementid+1,"Rutina" + (autoincrementid+1), "" + R.drawable.alumno, ""); //@todo Revisar
                 listaRutinas.add(a);
-                myRef.push().setValue(a);
+                myRef.child(String.valueOf(autoincrementid+1)).setValue(a);
                 list.setAdapter(adapter);
             }
         });
@@ -192,5 +196,22 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        String action = getIntent().getAction();
+        if(action == null || !action.equals("Already created")) {
+            Intent intent = new Intent(this, HomeActivity.class);
+            startActivity(intent);
+            finish();
+        }
+        // Remove the unique action so the next time onResume is called it will restart
+        else
+            getIntent().setAction(null);
+
+        super.onResume();
+        //When BACK BUTTON is pressed, the activity on the stack is restarted
+        //Do what you want on the refresh procedure here
     }
 }
