@@ -35,6 +35,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
+    implementation 'com.firebaseui:firebase-ui-database:7.1.1'
+
     // FirebaseUI for Firebase Auth
     implementation 'com.firebaseui:firebase-ui-auth:8.0.2'
     implementation 'com.google.firebase:firebase-auth:21.1.0'
@@ -57,3 +59,6 @@ dependencies {
     implementation "androidx.room:room-runtime:2.5.1"
     annotationProcessor "androidx.room:room-compiler:2.5.1"
 }
+
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.android.application'

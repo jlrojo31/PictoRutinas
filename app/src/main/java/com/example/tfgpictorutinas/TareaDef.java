@@ -1,5 +1,6 @@
 package com.example.tfgpictorutinas;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -34,6 +35,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayOutputStream;
@@ -43,6 +49,8 @@ import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TareaDef extends AppCompatActivity {
 
@@ -59,10 +67,16 @@ public class TareaDef extends AppCompatActivity {
     TextView hora_end;
     EditText et_descripcion;
     Button btn_actualizar;
+
+    private DatabaseReference mDataBase = FirebaseDatabase.getInstance().getReference();
+    private long idRutina;
+    private long idTarea;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tarea_def);
+
 
         extras = getIntent().getExtras();
         //variables de la vista
@@ -75,7 +89,19 @@ public class TareaDef extends AppCompatActivity {
         et_descripcion = findViewById(R.id.EtDescripcionTareaDef);
         btn_actualizar = findViewById(R.id.idBtActualizarTarea);
 
-        setHoraActual();
+
+        extras = getIntent().getExtras();
+        idRutina = extras.getLong("idRutina");
+        idTarea = extras.getLong("idTarea");
+        int is_old = extras.getInt("is_old");
+        if(is_old==1){
+            showdata();
+        }else{
+            btn_actualizar.setText("Añadir tarea");
+            setHoraActual();
+        }
+        Toast.makeText(this," datos"+ idTarea,Toast.LENGTH_SHORT).show();
+
         hora_ini.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,20 +119,70 @@ public class TareaDef extends AppCompatActivity {
         btn_actualizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-                String descripcion = et_descripcion.getText().toString().trim();
-                String aDate = hora_ini.getText().toString();
-
+                if(is_old==1){
+                    updateTarea(picto,hora_end,hora_ini,et_descripcion);
+                }else{
+                    guardardataNew(picto,hora_end,hora_ini,et_descripcion);
+                }
             }
         });
     }
-    private void  guardardata(ImageView picto, TextView hora_end, TextView hora_ini, EditText et_descripcion,String rutina){
+
+    private void showdata() {
+        extras = getIntent().getExtras();
+
+        idRutina = extras.getLong("idRutina");
+        idTarea = extras.getLong("idTarea");
+
+        String tarea_picto = extras.getString("tarea_picto");
+        String tarea_descripcion = extras.getString("tarea_descripcion");
+        String tarea_hora_ini = extras.getString("tarea_hora_ini");
+        String tarea_hora_end = extras.getString("tarea_hora_end");
+
+
+        byte[] imageAsBytes = Base64.decode(tarea_picto, Base64.DEFAULT);
+        picto.setImageBitmap((BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length)));
+
+        hora_ini.setText(tarea_hora_ini);
+        hora_end.setText(tarea_hora_end);
+
+        et_descripcion.setText(tarea_descripcion);
+        btn_actualizar.setText("Actualizar");
+
+    }
+    private void updateTarea(ImageView picto, TextView hora_end, TextView hora_ini, EditText et_descripcion){
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("idTarea",idTarea);
+        map.put("nombreTarea",et_descripcion.getText().toString());
+        map.put("fotoTarea",getBitstreamPicto( picto));
+        map.put("hora_ini",hora_ini.getText().toString());
+        map.put("hora_end",hora_end.getText().toString());
+        map.put("rutina_id",idRutina);
+
+        mDataBase.child("pictorutinas/tareas").child(String.valueOf(idTarea)).updateChildren(map)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(TareaDef.this,"Tarea actualizada",Toast.LENGTH_SHORT).show();
+                        Intent i = new Intent(TareaDef.this, EditorTareas.class);
+                        startActivity(i);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(TareaDef.this,"ERROR",Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+    }
+    private void  guardardataNew(ImageView picto, TextView hora_end, TextView hora_ini, EditText et_descripcion){
         String tarea_picto= getBitstreamPicto( picto);
         String tarea_hora_ini= hora_ini.getText().toString();
         String tarea_hora_end= hora_end.getText().toString();
         String tarea_descripcion= et_descripcion.getText().toString();
-        if(tarea_picto.isEmpty() ||  tarea_hora_ini.isEmpty() || tarea_hora_end.isEmpty() || tarea_descripcion.isEmpty() || rutina.isEmpty()){
+        if(tarea_picto.isEmpty() ||  tarea_hora_ini.isEmpty() || tarea_hora_end.isEmpty() || tarea_descripcion.isEmpty() ){
             String error = "";
             if (tarea_picto.isEmpty())
                 error="PICTOGRAMA";
@@ -119,6 +195,54 @@ public class TareaDef extends AppCompatActivity {
             if (tarea_picto.isEmpty())
                 error="RUTINA";
             Toast.makeText(this,"Falta"+error+" datos por definir",Toast.LENGTH_SHORT).show();
+
+        }else {
+            /*
+            extras = getIntent().getExtras();
+            idRutina = extras.getLong("idRutina");
+            idTarea = extras.getLong("idTarea");
+            Tarea tarea = new Tarea(idTarea,tarea_descripcion,tarea_picto,tarea_hora_ini,tarea_hora_end,idRutina);
+            mDataBase.child("pictorutinas/tareas").child(String.valueOf(idTarea)).setValue(tarea)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Toast.makeText(TareaDef.this,"Tarea guardada",Toast.LENGTH_SHORT).show();
+                            Intent i = new Intent(TareaDef.this, EditorTareas.class);
+                            i.putExtra("id_rutinas", idRutina);
+                            startActivity(i);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(TareaDef.this,"ERROR",Toast.LENGTH_SHORT).show();
+                        }
+                    });*/
+
+            Map<String,Object> map = new HashMap<>();
+            map.put("idTarea",idTarea);
+            map.put("nombreTarea",et_descripcion.getText().toString());
+            map.put("fotoTarea",getBitstreamPicto( picto));
+            map.put("hora_ini",hora_ini.getText().toString());
+            map.put("hora_end",hora_end.getText().toString());
+            map.put("rutina_id",idRutina);
+
+            mDataBase.child("pictorutinas/tareas").push()
+                    .setValue(map)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Toast.makeText(TareaDef.this,"Tarea guardada",Toast.LENGTH_SHORT).show();
+                            Intent i = new Intent(TareaDef.this, EditorTareas.class);
+                            startActivity(i);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(TareaDef.this,"ERROR",Toast.LENGTH_SHORT).show();
+                        }
+                    });
         }
     }
     private String getBitstreamPicto(ImageView picto){

@@ -19,7 +19,7 @@ tools:context=".EditorTareas">
     android:textSize="50sp"
     tools:ignore="MissingConstraints" />
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listaTareas"
         android:layout_below="@id/nombreRut"
         android:layout_height="480dp"
@@ -29,7 +29,7 @@ tools:context=".EditorTareas">
         android:background="@color/white"
         android:divider="@drawable/list_divider"
         android:scrollbarAlwaysDrawVerticalTrack="true">
-    </ListView>
+    </androidx.recyclerview.widget.RecyclerView>
 
     <Button
         android:id="@+id/idBtnNuevaTarea"
