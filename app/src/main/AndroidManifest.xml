@@ -21,6 +21,9 @@
         android:theme="@style/Theme.PictoRutinas"
         tools:targetApi="31">
         <activity
+            android:name=".HorarioAlumno"
+            android:exported="false" />
+        <activity
             android:name=".Participantes"
             android:exported="false" />
         <activity

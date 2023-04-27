@@ -3,8 +3,13 @@ package com.example.tfgpictorutinas;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.tfgpictorutinas.firebaseRDB.Usuario;
 import com.google.firebase.database.DataSnapshot;
@@ -46,6 +51,19 @@ public class Alumnos extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                View str = ((LinearLayout)arg1).getChildAt(1);
+                String texto = ((TextView)str).getText().toString();
+
+                Intent i = new Intent(Alumnos.this, HorarioAlumno.class);
+                i.putExtra("alumno", texto);
+                startActivity(i);
             }
         });
     }
