@@ -7,7 +7,7 @@
     tools:context=".HomeAlumno">
 
     <TextView
-        android:id="@+id/idAlumnoTV"
+        android:id="@+id/idDiaTV"
         android:layout_width="320dp"
         android:layout_height="wrap_content"
         android:padding="35dp"
@@ -20,15 +20,15 @@
         android:textSize="50dp" />
 
     <ListView
-        android:id="@+id/alumnoLV"
-        android:layout_height="510dp"
+        android:id="@+id/listaTareasAlumno"
+        android:layout_below="@id/idDiaTV"
+        android:layout_height="480dp"
         android:layout_width="match_parent"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="35dp"
-        android:layout_marginRight="35dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
         android:background="@color/white"
         android:divider="@drawable/list_divider"
-        android:layout_below="@id/idAlumnoTV"
         android:scrollbarAlwaysDrawVerticalTrack="true">
     </ListView>
 
