@@ -34,10 +34,9 @@ public class MainActivity extends AppCompatActivity {
     // declaring a const int value which we
     // will be using in Firebase auth.
     public static final int RC_SIGN_IN = 1;
-
+    boolean administrador = true;
     // creating an auth listener for our Firebase auth
     private FirebaseAuth.AuthStateListener mAuthStateListener;
-
     // below is the list which we have created in which
     // we can add the authentication which we have to
     // display inside our app.
@@ -50,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
             // below line is used for adding google
             // authentication builder in our app.
             new AuthUI.IdpConfig.GoogleBuilder().build());
+
+    String name = "";
+    String email = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +68,6 @@ public class MainActivity extends AppCompatActivity {
             @SuppressLint("ResourceType")
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-
-                String name = "";
-                String email = "";
-                boolean administrador = true;
                 // we are calling method for on authentication state changed.
                 // below line is used for getting current user which is
                 // authenticated previously.
@@ -78,83 +76,44 @@ public class MainActivity extends AppCompatActivity {
                 // checking if the user
                 // is null or not.
                 if (user != null) {
-                    //MIO VER DE PASAR A LA SIGUIENTE PANTALLA
                     FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
                     if (usuario != null) {
                         // User is signed in
                         name = usuario.getDisplayName();
                         email = usuario.getEmail();
-                        Uri photoUrl = usuario.getPhotoUrl();
-
-                        // Check if user's email is verified
-                        boolean emailVerified = usuario.isEmailVerified();
-
-                        // The user's ID, unique to the Firebase project. Do NOT use this value to
-                        // authenticate with your backend server, if you have one. Use
-                        // FirebaseUser.getIdToken() instead.
-                        String uid = usuario.getUid();
                     } else {
                         // No user is signed in
                     }
-                    //MIO
 
                     //Firebase RealTime Database
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference myRef = database.getReference().child("pictorutinas").child("usuarios");
 
-                   /* // Read from the database
-                    myRef.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            // This method is called once with the initial value and again
-                            // whenever data at this location is updated.
-                            Map<String,Object> value = (Map<String, Object>) dataSnapshot.getValue();
-                            Log.d(TAG, "Value is: " + value);
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                            // Failed to read value
-                            Log.w(TAG, "Failed to read value.", error.toException());
-                        }
-                    });
-                    */
-
-                    /*if (usuario != null) {
-                        // MIRAR SI NO EXISTE USUARIO EN LA BBDD Y AÑADIRLO
-                        name = usuario.getDisplayName();
-                        email = usuario.getEmail();
-                        administrador = true; //Total  a retocar
-                        Usuario usu = new Usuario(name,email,administrador);
-                        myRef.push().setValue(usu);
-                    } else {
-                        // No user is signed in
-                    }*/
-
-
                     myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            String nombre="";
-                            String email="";
-                            boolean administrador=true;
                             boolean existe = false;
-                            if (usuario != null) {
-                                // MIRAR SI NO EXISTE USUARIO EN LA BBDD Y AÑADIRLO
-                                nombre = usuario.getDisplayName();
-                                email = usuario.getEmail();
-                                administrador = true; //Total  a retocar
-                                Usuario usu = new Usuario(nombre,email,administrador);
-                                for(DataSnapshot data: dataSnapshot.getChildren()){
-                                    HashMap dataHash = (HashMap) data.getValue();
-                                    if (email.equals((String) dataHash.get("email"))){
-                                        existe = true;
-                                        break;
-                                    };
-                                }
-                                if (!existe) myRef.push().setValue(usu);
-                            } else {
-                                // No user is signed in
+                            // MIRAR SI NO EXISTE USUARIO EN LA BBDD Y AÑADIRLO
+                            name = usuario.getDisplayName();
+                            email = usuario.getEmail();
+                            Usuario usu = new Usuario(name,email,administrador);
+                            for(DataSnapshot data: dataSnapshot.getChildren()){
+                                HashMap dataHash = (HashMap) data.getValue();
+                                if (email.equals((String) dataHash.get("email"))){
+                                    existe = true;
+                                    administrador = (boolean)dataHash.get("administrador");
+                                    break;
+                                };
+                            }
+                            if (!existe) myRef.push().setValue(usu);
+
+                            if (administrador) {
+                                Intent i = new Intent(MainActivity.this, AdministradorAlumno.class);
+                                i.putExtra("usuario", name);
+                                startActivity(i);
+                            }else{
+                                Intent i = new Intent(MainActivity.this, HomeAlumno.class);
+                                startActivity(i);
                             }
                         }
                         @Override
@@ -163,17 +122,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                     //Fin Firebase RealTime Database
-
-                    if (administrador) {
-                        // if the user is already authenticated then we will
-                        // redirect our user to next screen which is our home screen.
-                        // we are redirecting to new screen via an intent.
-                        Intent i = new Intent(MainActivity.this, HomeActivity.class);
-                        startActivity(i);
-                    }else{
-                        Intent i = new Intent(MainActivity.this, HomeAlumno.class);
-                        startActivity(i);
-                    }
                     // we are calling finish method to kill or
                     // mainactivity which is displaying our login ui.
                     finish();
