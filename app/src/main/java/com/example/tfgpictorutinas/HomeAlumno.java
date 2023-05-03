@@ -44,10 +44,15 @@ public class HomeAlumno extends AppCompatActivity {
     String hora_actual;
     String hora_inicio;
     String hora_final;
+    int tamRutinas = 0;
+    int limite = 0;
     ArrayList<Tarea> tareas = new ArrayList<>();
     ArrayList<Tarea> tareasListado = new ArrayList<>();
+    HashMap<Long,String> listaRutinas = new HashMap<>();
     Temporizador alarmaActual;
     AdaptadorTareasVisionAlumno adaptadorTareasVisionAlumno;
+
+    String hoy;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,53 +104,76 @@ public class HomeAlumno extends AppCompatActivity {
         DatabaseReference refUsuRutinas = database.getReference().child("pictorutinas").child("usuariosrutinas");
         DatabaseReference refRutinas = database.getReference().child("pictorutinas").child("rutinas");
         DatabaseReference refTareas = database.getReference().child("pictorutinas").child("tareas");
-        String day = "";
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             String aux = LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.FULL,new Locale("es","ES"));
-            day = aux.toUpperCase().charAt(0) + aux.substring(1, aux.length());
+            hoy = aux.toUpperCase().charAt(0) + aux.substring(1, aux.length());
         }
         TextView diaActual = (TextView) findViewById(R.id.idDiaTV);
-        diaActual.setText(day);
+        diaActual.setText(hoy);
 
         ListView list = (ListView) findViewById(R.id.listaTareasAlumno);
         this.adaptadorTareasVisionAlumno = new AdaptadorTareasVisionAlumno(this, tareas);
 
-        //TODO FALTARIA CONSULTAR LAS RUTINAS PARA VER LAS REPETICIONES Y SABER SI EL DIA ACTUAL HAY QUE PONER ESA RUTINA O NO.
-        Query queryTarea = refTareas.orderByChild("rutina_id");
-        queryTarea.addListenerForSingleValueEvent(new ValueEventListener() {
+        Query queryRutina = refRutinas.orderByChild("idRutina");
+        queryRutina.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot data: dataSnapshot.getChildren()){
-                    HashMap dataHash = (HashMap) data.getValue();
-                    Tarea aux = new Tarea((Long)dataHash.get("idTarea"),(String)dataHash.get("nombreTarea") ,(String)dataHash.get("fotoTarea"),(String)dataHash.get("hora_ini"),(String)dataHash.get("hora_end"),(Long) dataHash.get("rutina_id"));
-                    tareasListado.add(aux);
+                for(DataSnapshot dataRutinas: dataSnapshot.getChildren()){
+                    HashMap dataHashRutinas = (HashMap) dataRutinas.getValue();
+                    listaRutinas.put((Long)dataHashRutinas.get("idRutina"), (String)dataHashRutinas.get("repeticiones"));
 
-                    Query queryUsuRut = refUsuRutinas.orderByChild("nombreUsuario").equalTo(usuActual);
-                    queryUsuRut.addListenerForSingleValueEvent(new ValueEventListener() {
+                    Query queryTarea = refTareas.orderByChild("rutina_id");
+                    queryTarea.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            for (DataSnapshot appleSnapshot: dataSnapshot.getChildren()) {
-                                HashMap dataUsuRut = (HashMap) appleSnapshot.getValue();
-                                if ((Long)dataUsuRut.get("idRutina") == (Long)dataHash.get("rutina_id")){
-                                    Tarea aux = new Tarea((Long)dataHash.get("idTarea"),(String)dataHash.get("nombreTarea") ,(String)dataHash.get("fotoTarea"),(String)dataHash.get("hora_ini"),(String)dataHash.get("hora_end"),(Long) dataHash.get("rutina_id"));
-                                    tareas.add(aux);
+                            limite = limite + 1;
+                            if (limite == tamRutinas){
+                                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                                    HashMap dataHash = (HashMap) data.getValue();
+                                    Tarea aux = new Tarea((Long) dataHash.get("idTarea"), (String) dataHash.get("nombreTarea"), (String) dataHash.get("fotoTarea"), (String) dataHash.get("hora_ini"), (String) dataHash.get("hora_end"), (Long) dataHash.get("rutina_id"));
+                                    tareasListado.add(aux);
+
+                                    Query queryUsuRut = refUsuRutinas.orderByChild("nombreUsuario").equalTo(usuActual);
+                                    queryUsuRut.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            for (DataSnapshot appleSnapshot : dataSnapshot.getChildren()) {
+                                                HashMap dataUsuRut = (HashMap) appleSnapshot.getValue();
+                                                if ((Long) dataUsuRut.get("idRutina") == (Long) dataHash.get("rutina_id")) {
+                                                    if (listaRutinas.containsKey((Long) dataHash.get("rutina_id"))) {
+                                                        String repe = listaRutinas.get((Long) dataHash.get("rutina_id"));
+                                                        if (repe.contains("" + hoy.charAt(0))) {
+                                                            Tarea aux = new Tarea((Long) dataHash.get("idTarea"), (String) dataHash.get("nombreTarea"), (String) dataHash.get("fotoTarea"), (String) dataHash.get("hora_ini"), (String) dataHash.get("hora_end"), (Long) dataHash.get("rutina_id"));
+                                                            tareas.add(aux);
+                                                        }
+                                                    }
+                                                }
+
+                                            }
+                                            adaptadorTareasVisionAlumno = new AdaptadorTareasVisionAlumno(HomeAlumno.this, tareas);
+                                            list.setAdapter(adaptadorTareasVisionAlumno);
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+                                            Log.e(TAG, "onCancelled", databaseError.toException());
+                                        }
+                                    });
+
                                 }
-
+                                if (tareasListado.size() != 0) activarAlarma(tareasListado);
                             }
-                            adaptadorTareasVisionAlumno = new AdaptadorTareasVisionAlumno(HomeAlumno.this, tareas);
-                            list.setAdapter(adaptadorTareasVisionAlumno);
                         }
-
                         @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            Log.e(TAG, "onCancelled", databaseError.toException());
+                        public void onCancelled(@NonNull DatabaseError error) {
+
                         }
                     });
 
+                    tamRutinas = tamRutinas +1;
                 }
-                if (tareasListado.size()!=0) activarAlarma(tareasListado);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
