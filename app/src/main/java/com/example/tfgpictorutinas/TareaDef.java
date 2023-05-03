@@ -227,13 +227,14 @@ public class TareaDef extends AppCompatActivity {
             map.put("hora_end",hora_end.getText().toString());
             map.put("rutina_id",idRutina);
 
-            mDataBase.child("pictorutinas/tareas").push()
+            mDataBase.child("pictorutinas/tareas").child(String.valueOf(idTarea))
                     .setValue(map)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {
                             Toast.makeText(TareaDef.this,"Tarea guardada",Toast.LENGTH_SHORT).show();
                             Intent i = new Intent(TareaDef.this, EditorTareas.class);
+                            i.putExtra("idRutina",idRutina);
                             startActivity(i);
                         }
                     })
