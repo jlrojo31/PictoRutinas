@@ -25,6 +25,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -41,17 +44,15 @@ import java.util.Locale;
 public class HomeAlumno extends AppCompatActivity {
 
     String usuActual;
-    String hora_actual;
-    String hora_inicio;
-    String hora_final;
     int tamRutinas = 0;
+    int tamTareas = 0;
     int limite = 0;
+    int limiteTareas = 0;
     ArrayList<Tarea> tareas = new ArrayList<>();
     ArrayList<Tarea> tareasListado = new ArrayList<>();
     HashMap<Long,String> listaRutinas = new HashMap<>();
     Temporizador alarmaActual;
     AdaptadorTareasVisionAlumno adaptadorTareasVisionAlumno;
-
     String hoy;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,36 +65,6 @@ public class HomeAlumno extends AppCompatActivity {
         cal.set (Calendar.HOUR_OF_DAY, 20);
         cal.set (Calendar.MINUTE, 12);
         cal.set (Calendar.SECOND, 0);
-        //dd.setAlarm(this, cal); //OJO BUENO DESCOMENTAR ESTO PARA ALARMA
-        /*Intent intentoLanzar = new Intent(getBaseContext(), Temporizador.class);
-        PendingIntent pIntent=PendingIntent.getBroadcast(this, 0, intentoLanzar, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT );
-
-        Date date = new Date();   // given date
-        Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
-        calendar.setTime(date);   // assigns calendar to given date
-        int a = calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
-        int b = calendar.get(Calendar.MINUTE);        // gets hour in 12h format
-        int c = calendar.get(Calendar.MONTH);
-
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(System.currentTimeMillis());
-
-        cal.set (Calendar.HOUR_OF_DAY, 16);
-        cal.set (Calendar.MINUTE, 40);
-        cal.set (Calendar.SECOND, 0);
-
-        AlarmManager aMan = (AlarmManager)getSystemService(ALARM_SERVICE);
-        aMan.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pIntent);
-*/
-
-
-        /*LocalDateTime locaDate = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            locaDate = LocalDateTime.now();
-            DateTimeFormatter dateTimeFormatter = DateTimeFormatter
-                    .ofPattern("hh:mm a");
-            hora_actual = dateTimeFormatter.format(locaDate);
-        }*/
 
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
         if (usuario != null) {
@@ -117,7 +88,6 @@ public class HomeAlumno extends AppCompatActivity {
 
         Query queryRutina = refRutinas.orderByChild("idRutina");
         queryRutina.addListenerForSingleValueEvent(new ValueEventListener() {
-
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot dataRutinas: dataSnapshot.getChildren()){
@@ -139,21 +109,28 @@ public class HomeAlumno extends AppCompatActivity {
                                     queryUsuRut.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
-                                            for (DataSnapshot appleSnapshot : dataSnapshot.getChildren()) {
-                                                HashMap dataUsuRut = (HashMap) appleSnapshot.getValue();
-                                                if ((Long) dataUsuRut.get("idRutina") == (Long) dataHash.get("rutina_id")) {
-                                                    if (listaRutinas.containsKey((Long) dataHash.get("rutina_id"))) {
-                                                        String repe = listaRutinas.get((Long) dataHash.get("rutina_id"));
-                                                        if (repe.contains("" + hoy.charAt(0))) {
-                                                            Tarea aux = new Tarea((Long) dataHash.get("idTarea"), (String) dataHash.get("nombreTarea"), (String) dataHash.get("fotoTarea"), (String) dataHash.get("hora_ini"), (String) dataHash.get("hora_end"), (Long) dataHash.get("rutina_id"));
-                                                            tareas.add(aux);
-                                                        }
-                                                    }
-                                                }
+                                            limiteTareas = limiteTareas + 1;
+                                            if (limiteTareas == tamTareas){
+                                                for (DataSnapshot appleSnapshot : dataSnapshot.getChildren()) {
+                                                    HashMap dataUsuRut = (HashMap) appleSnapshot.getValue();
+                                                    //if ((Long) dataUsuRut.get("idRutina") == (Long) dataHash.get("rutina_id")) {
+                                                        //if (listaRutinas.containsKey((Long) dataHash.get("rutina_id"))) {
+                                                            String repe = listaRutinas.get((Long) dataUsuRut.get("idRutina"));
+                                                            if (repe.contains("" + hoy.charAt(0))) {
+                                                                for (Tarea tar:tareasListado){
+                                                                    if (tar.getRutina_id()==(Long) dataUsuRut.get("idRutina")) tareas.add(tar);
+                                                                }
+                                                                //Tarea aux = new Tarea((Long) dataHash.get("idTarea"), (String) dataHash.get("nombreTarea"), (String) dataHash.get("fotoTarea"), (String) dataHash.get("hora_ini"), (String) dataHash.get("hora_end"), (Long) dataHash.get("rutina_id"));
+                                                                //tareas.add(aux);
+                                                            }
+                                                       // }
+                                                    //}
 
-                                            }
+                                                }
                                             adaptadorTareasVisionAlumno = new AdaptadorTareasVisionAlumno(HomeAlumno.this, tareas);
                                             list.setAdapter(adaptadorTareasVisionAlumno);
+                                            if (tareas.size() != 0) activarAlarma(tareas);
+                                            }
                                         }
 
                                         @Override
@@ -161,9 +138,8 @@ public class HomeAlumno extends AppCompatActivity {
                                             Log.e(TAG, "onCancelled", databaseError.toException());
                                         }
                                     });
-
+                                tamTareas=tamTareas+1;
                                 }
-                                if (tareasListado.size() != 0) activarAlarma(tareasListado);
                             }
                         }
                         @Override
@@ -171,7 +147,6 @@ public class HomeAlumno extends AppCompatActivity {
 
                         }
                     });
-
                     tamRutinas = tamRutinas +1;
                 }
             }
@@ -183,30 +158,76 @@ public class HomeAlumno extends AppCompatActivity {
     }
 
     public void activarAlarma(ArrayList<Tarea> tareas){
-        //TODO FALTARIA COMPROBAR SI LA TAREA SE ENCUENTRA DENTRO DE LA HORA ACTUAL O CUAL ES LA QUE COMIENZA ANTES
-        // AHORA MISMO ÚNICAMENTE PONE ALARMA A LA PRIMERA TAREA QUE ENCUENTRA.
         Calendar calen = Calendar.getInstance();
         calen.setTimeInMillis(System.currentTimeMillis());
         int hour = calen.get(Calendar.HOUR);
         int minutes = calen.get(Calendar.MINUTE);
         int am_pm = calen.get(Calendar.AM_PM);
         String amPMS;
+        Date horaPosteriorFormato = null;
+        String horaPosterior = "";
+        Long tareaPosterior = 0L;
         if (am_pm==1)  amPMS="PM"; else amPMS="AM";
 
+        DateFormat dateFormat = new SimpleDateFormat("hh:mm a");
+        Date dateActual, dateIni, dateFin;
 
-        String[] partesHora = tareas.get(0).getHora_ini().split(":");
-        String hora = partesHora[0];
-        String[] partesMinutos = partesHora[1].split(" ");
-        String minutos = partesMinutos[0];
-        String ampm = partesMinutos[1];
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(System.currentTimeMillis());
-        alarmaActual = new Temporizador();
-        cal.set (Calendar.HOUR, Integer.valueOf(hora)-2);
-        cal.set (Calendar.MINUTE, Integer.valueOf(minutos));
-        if (ampm.equals("AM")) cal.set(Calendar.AM_PM, Calendar.AM);
-        cal.set (Calendar.SECOND, 0);
-        alarmaActual.setAlarm(HomeAlumno.this,cal,tareas.get(0).idTarea);
+        boolean encontrado = false;
+        for (Tarea tarea:tareas) {
+            try {
+                dateActual = dateFormat.parse(hour + ":" + minutes + " " + amPMS);
+                dateIni = dateFormat.parse(tarea.hora_ini);
+                dateFin = dateFormat.parse(tarea.hora_end);
+
+                if ((dateIni.compareTo(dateActual) <= 0) && (dateFin.compareTo(dateActual) >= 0)) {
+                    String[] partesHora = tarea.getHora_ini().split(":");
+                    String hora = partesHora[0];
+                    String[] partesMinutos = partesHora[1].split(" ");
+                    String minutos = partesMinutos[0];
+                    String ampm = partesMinutos[1];
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTimeInMillis(System.currentTimeMillis());
+                    alarmaActual = new Temporizador();
+                    cal.set (Calendar.HOUR, Integer.valueOf(hora)-2); //TODO OJO HORA DEL RELOJ EN EL TELEFONO SIMULADOR REVISAR
+                    cal.set (Calendar.MINUTE, Integer.valueOf(minutos));
+                    if (ampm.equals("AM")) cal.set(Calendar.AM_PM, Calendar.AM);
+                    cal.set (Calendar.SECOND, 0);
+                    alarmaActual.setAlarm(HomeAlumno.this,cal,tarea.getIdTarea());
+                    encontrado = true;
+                    break;
+                }else{
+                    if ((dateIni.compareTo(dateActual) >= 0))
+                        if (horaPosteriorFormato==null) {
+                            horaPosteriorFormato = dateIni;
+                            horaPosterior = tarea.hora_ini;
+                            tareaPosterior = tarea.getIdTarea();
+                        }
+                        else if (horaPosteriorFormato.compareTo(dateIni) >=0) {
+                            horaPosteriorFormato = dateIni;
+                            horaPosterior = tarea.hora_ini;
+                            tareaPosterior = tarea.getIdTarea();
+                        }
+                }
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+        if (!encontrado){
+            String[] partesHora = horaPosterior.split(":");
+            String hora = partesHora[0];
+            String[] partesMinutos = partesHora[1].split(" ");
+            String minutos = partesMinutos[0];
+            String ampm = partesMinutos[1];
+            Calendar cal = Calendar.getInstance();
+            cal.setTimeInMillis(System.currentTimeMillis());
+            alarmaActual = new Temporizador();
+            cal.set (Calendar.HOUR, Integer.valueOf(hora)-2); //TODO OJO HORA DEL RELOJ EN EL TELEFONO SIMULADOR REVISAR
+            cal.set (Calendar.MINUTE, Integer.valueOf(minutos));
+            if (ampm.equals("AM")) cal.set(Calendar.AM_PM, Calendar.AM);
+            cal.set (Calendar.SECOND, 0);
+            alarmaActual.setAlarm(HomeAlumno.this,cal,tareaPosterior);
+        }
     }
 
 }
