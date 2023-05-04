@@ -4,19 +4,25 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import org.w3c.dom.Text;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class RutinaDef extends AppCompatActivity {
-    private TextView tvNombre;
+    private EditText tvNombre;
     private GridLayout gridRepeticiones;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference().child("pictorutinas").child("rutinas");
@@ -39,7 +45,7 @@ public class RutinaDef extends AppCompatActivity {
         cbs= (CheckBox) findViewById(R.id.idCbSabado);
         cbd= (CheckBox) findViewById(R.id.idCbDomingo);
 
-        tvNombre = (TextView) findViewById(R.id.nombreRutina);
+        tvNombre = (EditText) findViewById(R.id.nombreRutina);
         gridRepeticiones = findViewById(R.id.idGlRepeticiones);
         if(gridRepeticiones.getVisibility()== View.VISIBLE){
             gridRepeticiones.setVisibility(View.GONE);
@@ -106,6 +112,23 @@ public class RutinaDef extends AppCompatActivity {
                 if (repeticiones.contains("V"))  cbv.setChecked(true);
                 if (repeticiones.contains("S"))  cbs.setChecked(true);
                 if (repeticiones.contains("D"))  cbd.setChecked(true);
+            }
+        });
+
+
+        // onclick listener para el boton editar tarea.
+        tvNombre.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // If the event is a key-down event on the "enter" button
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    Map<String, Object> update = new HashMap<>();
+                    update.put("nombre", tvNombre.getText().toString());
+                    DatabaseReference referencia = myRef.child(idRutina.toString());
+                    referencia.updateChildren(update);
+                    return true;
+                }
+                return false;
             }
         });
 

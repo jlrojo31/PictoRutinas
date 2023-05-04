@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".RutinaDef">
 
-    <TextView
+    <EditText
         android:id="@+id/nombreRutina"
         android:layout_width="350dp"
         android:layout_height="100dp"
