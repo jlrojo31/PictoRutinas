@@ -7,7 +7,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
@@ -26,11 +30,14 @@ import com.google.firebase.database.ValueEventListener;
 import java.sql.Time;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class TareaEnCurso extends AppCompatActivity {
 
     Long idTarea;
     TemporizadorRegreso alarmaRegreso;
+
+    TextToSpeech tts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +55,25 @@ public class TareaEnCurso extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference refTareas = database.getReference().child("pictorutinas").child("tareas");
 
+        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.sd_alert3);
+        mediaPlayer.start();
+
+        idTareaEnCurso.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ttsFunction();
+            }
+        });
+
+        fotoTareaEnCurso.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ttsFunction();
+            }
+        });
+
         Query queryTarea = refTareas.orderByChild("idTarea").equalTo(idTarea);
         queryTarea.addListenerForSingleValueEvent(new ValueEventListener() {
-
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Tarea aux = new Tarea();
@@ -75,39 +98,49 @@ public class TareaEnCurso extends AppCompatActivity {
                 if (ampm.equals("AM")) cal.set(Calendar.AM_PM, Calendar.AM);
                 cal.set (Calendar.SECOND, 0);
                 alarmaRegreso.setAlarm(TareaEnCurso.this,cal);
-
-                /*Calendar actual = Calendar.getInstance();
-                actual.setTimeInMillis(System.currentTimeMillis());
-                int horaActual = actual.get(Calendar.HOUR_OF_DAY);
-                int horaFin = cal.get(Calendar.HOUR_OF_DAY);
-                int diferenciaHoras = (horaFin-horaActual) *60;
-                int minutosActual = actual.get(Calendar.MINUTE);
-                int minutosFin = cal.get(Calendar.MINUTE);
-                int diferenciaMinutos = minutosFin-minutosActual;
-                int minutosTotal = diferenciaHoras+diferenciaMinutos;
-                int reduccion = Integer.valueOf(minutosTotal/4);
-                for (int i=0;i<3;i++){
-                    try {
-                        Thread.sleep(10000);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                    Toast ddd= new Toast(TareaEnCurso.this);
-                    ddd.setView((ImageView) findViewById(R.id.fotoTareaEnCurso));
-                    ddd.setGravity(Gravity.LEFT|Gravity.LEFT,0,0);
-                    ddd.setDuration(Toast.LENGTH_LONG);
-                    ddd.show();
-                    Toast toast2 = Toast.makeText(TareaEnCurso.this,"Regreso de alarma",Toast.LENGTH_SHORT);
-                    toast2.setDuration(Toast.LENGTH_LONG);
-                    toast2.setGravity(Gravity.CENTER|Gravity.LEFT,0,0);
-
-                    toast2.show();
-                }*/
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
+    }
+    public void ttsFunction() {
+        tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    Locale locSpanish = new Locale("spa", "ESP");
+                    int result = tts.setLanguage(locSpanish);
+                    if (result == TextToSpeech.LANG_MISSING_DATA
+                            || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Toast.makeText(getApplicationContext(), "Lenguaje no soportado", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Log.v(TAG, "onInit exitoso");
+                        TextView mTextView = (TextView) findViewById(R.id.idTareaEnCurso);
+
+                        String strTexto = mTextView.getText().toString();
+                        leerTexto(strTexto);
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), "Falló la inicialización", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+    }
+
+    void leerTexto(String strTexto){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Log.v(TAG, "API 21+");
+            Bundle bundle = new Bundle();
+            bundle.putInt(TextToSpeech.Engine.KEY_PARAM_STREAM, AudioManager.STREAM_MUSIC);
+            tts.speak(strTexto, TextToSpeech.QUEUE_FLUSH, bundle, null);
+        } else {
+            Log.v(TAG, "API 15-");
+            HashMap<String, String> param = new HashMap<>();
+            param.put(TextToSpeech.Engine.KEY_PARAM_STREAM, String.valueOf(AudioManager.STREAM_MUSIC));
+            tts.speak(strTexto, TextToSpeech.QUEUE_FLUSH, param);
+        }
     }
 }
