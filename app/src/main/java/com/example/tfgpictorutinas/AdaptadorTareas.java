@@ -68,7 +68,7 @@ public class AdaptadorTareas extends FirebaseRecyclerAdapter<Tarea,AdaptadorTare
                 intent.putExtra("tarea_descripcion", model.getNombreTarea());
                 intent.putExtra("tarea_hora_ini", model.getHora_ini());
                 intent.putExtra("tarea_hora_end", model.getHora_end());
-
+                intent.putExtra("key", String.valueOf((getRef(position).getKey())));
 
                 holder.editButton.getContext().startActivity(intent);
             }
