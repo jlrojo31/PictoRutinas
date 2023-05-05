@@ -93,7 +93,7 @@ public class TareaEnCurso extends AppCompatActivity {
                 Calendar cal = Calendar.getInstance();
                 cal.setTimeInMillis(System.currentTimeMillis());
                 alarmaRegreso = new TemporizadorRegreso();
-                cal.set (Calendar.HOUR, Integer.valueOf(hora)-2);
+                cal.set (Calendar.HOUR, Integer.valueOf(hora));
                 cal.set (Calendar.MINUTE, Integer.valueOf(minutos));
                 if (ampm.equals("AM")) cal.set(Calendar.AM_PM, Calendar.AM);
                 cal.set (Calendar.SECOND, 0);

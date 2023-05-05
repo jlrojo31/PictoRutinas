@@ -222,7 +222,7 @@ public class HomeAlumno extends AppCompatActivity {
             Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(System.currentTimeMillis());
             alarmaActual = new Temporizador();
-            cal.set (Calendar.HOUR, Integer.valueOf(hora)-2); //TODO OJO HORA DEL RELOJ EN EL TELEFONO SIMULADOR REVISAR
+            cal.set (Calendar.HOUR, Integer.valueOf(hora));
             cal.set (Calendar.MINUTE, Integer.valueOf(minutos));
             if (ampm.equals("AM")) cal.set(Calendar.AM_PM, Calendar.AM);
             cal.set (Calendar.SECOND, 0);
