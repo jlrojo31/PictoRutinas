@@ -5,18 +5,21 @@ import static android.content.ContentValues.TAG;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.speech.tts.TextToSpeech;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +42,12 @@ public class TareaEnCurso extends AppCompatActivity {
 
     TextToSpeech tts;
 
+    private ProgressBar mProgressBar;
+    private int mProgressStatus = 0;
+
+    private Handler mHandler = new Handler();
+
+    @SuppressLint("Range")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +55,10 @@ public class TareaEnCurso extends AppCompatActivity {
 
         ImageView fotoTareaEnCurso = (ImageView) findViewById(R.id.fotoTareaEnCurso);
         TextView idTareaEnCurso = (TextView) findViewById(R.id.idTareaEnCurso);
+        ProgressBar pbTareaEnCurso = (ProgressBar) findViewById(R.id.PbTareaEnCurso);
+        pbTareaEnCurso.setAlpha(127);
+
+        final int totalProgressTime = 100;
 
         Bundle extras = getIntent().getExtras();
         if (extras!=null) {
@@ -72,6 +85,7 @@ public class TareaEnCurso extends AppCompatActivity {
             }
         });
 
+
         Query queryTarea = refTareas.orderByChild("idTarea").equalTo(idTarea);
         queryTarea.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -93,11 +107,44 @@ public class TareaEnCurso extends AppCompatActivity {
                 Calendar cal = Calendar.getInstance();
                 cal.setTimeInMillis(System.currentTimeMillis());
                 alarmaRegreso = new TemporizadorRegreso();
+                if (Integer.valueOf(hora)==12) hora = "0";
                 cal.set (Calendar.HOUR, Integer.valueOf(hora));
                 cal.set (Calendar.MINUTE, Integer.valueOf(minutos));
                 if (ampm.equals("AM")) cal.set(Calendar.AM_PM, Calendar.AM);
                 cal.set (Calendar.SECOND, 0);
                 alarmaRegreso.setAlarm(TareaEnCurso.this,cal);
+
+
+                Calendar calActual =Calendar.getInstance();//hora actual sistema
+                //calculamos diferencia
+                int difHoras =cal.get(Calendar.HOUR_OF_DAY) - calActual.get(Calendar.HOUR_OF_DAY);
+                int difMinutos =cal.get(Calendar.MINUTE) - calActual.get(Calendar.MINUTE);
+                int difSegundos =cal.get(Calendar.SECOND) - calActual.get(Calendar.SECOND);
+                Calendar calDif =Calendar.getInstance();//variable para diferencia de tiempo
+                calDif.set(Calendar.HOUR_OF_DAY, difHoras);
+                calDif.set(Calendar.MINUTE, difMinutos);
+                calDif.set(Calendar.SECOND, difSegundos);
+                int totalminutos =calDif.get(Calendar.HOUR) * 60 + calDif.get(Calendar.MINUTE);
+                int totalMs= totalminutos * 60000;
+                int progreso= Integer.valueOf(totalMs/100);
+
+                //Progreso
+                final Thread t = new Thread() {
+                    @Override
+                    public void run() {
+                        while (mProgressStatus < totalProgressTime) {
+                            mProgressStatus++;
+                            android.os.SystemClock.sleep(progreso);
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    pbTareaEnCurso.setProgress(mProgressStatus);
+                                }
+                            });
+                        }
+                    }
+                };
+                t.start();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

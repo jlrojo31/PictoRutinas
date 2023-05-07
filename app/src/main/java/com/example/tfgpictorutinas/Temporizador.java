@@ -1,5 +1,7 @@
 package com.example.tfgpictorutinas;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -16,12 +18,17 @@ public class Temporizador extends BroadcastReceiver {
         Bundle extras = intent.getExtras();
         Long idTarea;
         idTarea = extras.getLong("idTarea");
-        Toast.makeText(context,"Alarma ahora",Toast.LENGTH_SHORT).show();
-
-        Intent tareaEnCurso = new Intent(context, TareaEnCurso.class);
-        tareaEnCurso.putExtra("idTarea",idTarea);
-        tareaEnCurso.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(tareaEnCurso);
+        Toast.makeText(context,"Alarma Actual",Toast.LENGTH_SHORT).show();
+        if (idTarea==0){
+            Intent tareaEnCurso = new Intent(context, HomeAlumno.class);
+            tareaEnCurso.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | FLAG_ACTIVITY_CLEAR_TASK);
+            context.startActivity(tareaEnCurso);
+        }else {
+            Intent tareaEnCurso = new Intent(context, TareaEnCurso.class);
+            tareaEnCurso.putExtra("idTarea", idTarea);
+            tareaEnCurso.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(tareaEnCurso);
+        }
     }
 
     public void setAlarm(Context context, Calendar cal, Long idTarea){

@@ -167,6 +167,7 @@ public class HomeAlumno extends AppCompatActivity {
         Date horaPosteriorFormato = null;
         String horaPosterior = "";
         Long tareaPosterior = 0L;
+        boolean primero = false;
         if (am_pm==1)  amPMS="PM"; else amPMS="AM";
 
         DateFormat dateFormat = new SimpleDateFormat("hh:mm a");
@@ -179,7 +180,7 @@ public class HomeAlumno extends AppCompatActivity {
                 dateIni = dateFormat.parse(tarea.hora_ini);
                 dateFin = dateFormat.parse(tarea.hora_end);
 
-                if ((dateIni.compareTo(dateActual) <= 0) && (dateFin.compareTo(dateActual) >= 0)) {
+                if ((dateIni.compareTo(dateActual) <= 0) && (dateFin.compareTo(dateActual) > 0)) {
                     String[] partesHora = tarea.getHora_ini().split(":");
                     String hora = partesHora[0];
                     String[] partesMinutos = partesHora[1].split(" ");
@@ -188,7 +189,8 @@ public class HomeAlumno extends AppCompatActivity {
                     Calendar cal = Calendar.getInstance();
                     cal.setTimeInMillis(System.currentTimeMillis());
                     alarmaActual = new Temporizador();
-                    cal.set (Calendar.HOUR, Integer.valueOf(hora)-2); //TODO OJO HORA DEL RELOJ EN EL TELEFONO SIMULADOR REVISAR
+                    if (Integer.valueOf(hora)==12) hora = "0";
+                    cal.set (Calendar.HOUR, Integer.valueOf(hora));
                     cal.set (Calendar.MINUTE, Integer.valueOf(minutos));
                     if (ampm.equals("AM")) cal.set(Calendar.AM_PM, Calendar.AM);
                     cal.set (Calendar.SECOND, 0);
@@ -196,17 +198,23 @@ public class HomeAlumno extends AppCompatActivity {
                     encontrado = true;
                     break;
                 }else{
-                    if ((dateIni.compareTo(dateActual) >= 0))
-                        if (horaPosteriorFormato==null) {
+                    if ((dateIni.compareTo(dateActual) >= 0)) {
+                        if (horaPosteriorFormato == null) {
+                            horaPosteriorFormato = dateIni;
+                            horaPosterior = tarea.hora_ini;
+                            tareaPosterior = tarea.getIdTarea();
+                        } else if (horaPosteriorFormato.compareTo(dateIni) >= 0) {
                             horaPosteriorFormato = dateIni;
                             horaPosterior = tarea.hora_ini;
                             tareaPosterior = tarea.getIdTarea();
                         }
-                        else if (horaPosteriorFormato.compareTo(dateIni) >=0) {
-                            horaPosteriorFormato = dateIni;
-                            horaPosterior = tarea.hora_ini;
-                            tareaPosterior = tarea.getIdTarea();
-                        }
+                    }else {//No hay más tareas posteriores
+                        Date diaPosterior = dateFormat.parse("11:59 PM");
+                        horaPosteriorFormato = diaPosterior;
+                        horaPosterior = "11:59 PM";
+                        tareaPosterior = 0L;
+                    }
+
                 }
             } catch (ParseException e) {
                 throw new RuntimeException(e);
@@ -222,10 +230,11 @@ public class HomeAlumno extends AppCompatActivity {
             Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(System.currentTimeMillis());
             alarmaActual = new Temporizador();
+            if (Integer.valueOf(hora)==12) hora = "0";
             cal.set (Calendar.HOUR, Integer.valueOf(hora));
             cal.set (Calendar.MINUTE, Integer.valueOf(minutos));
+            if ( tareaPosterior==0L) cal.set(Calendar.SECOND,59); else cal.set(Calendar.SECOND,0);
             if (ampm.equals("AM")) cal.set(Calendar.AM_PM, Calendar.AM);
-            cal.set (Calendar.SECOND, 0);
             alarmaActual.setAlarm(HomeAlumno.this,cal,tareaPosterior);
         }
     }

@@ -1,10 +1,13 @@
 package com.example.tfgpictorutinas;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -16,8 +19,11 @@ public class TemporizadorRegreso extends BroadcastReceiver {
 
         Toast.makeText(context,"Regreso de alarma",Toast.LENGTH_SHORT).show();
 
+        MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.sd_alert4);
+        mediaPlayer.start();
+
         Intent homeAlumno = new Intent(context, HomeAlumno.class);
-        homeAlumno.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        homeAlumno.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(homeAlumno);
     }
 
