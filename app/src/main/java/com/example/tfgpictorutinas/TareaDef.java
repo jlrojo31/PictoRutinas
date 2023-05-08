@@ -163,7 +163,7 @@ public class TareaDef extends AppCompatActivity {
     private void updateTarea(ImageView picto, TextView hora_end, TextView hora_ini, EditText et_descripcion) throws ParseException {
 
         Map<String,Object> map = new HashMap<>();
-        map.put("idTarea",extras.getString("idTarea"));
+        map.put("idTarea",idTarea);
         map.put("nombreTarea",et_descripcion.getText().toString());
         map.put("fotoTarea",getBitstreamPicto( picto));
         map.put("hora_ini",hora_ini.getText().toString());
@@ -176,6 +176,7 @@ public class TareaDef extends AppCompatActivity {
                         public void onSuccess(Void unused) {
                             Toast.makeText(TareaDef.this,"Tarea actualizada",Toast.LENGTH_SHORT).show();
                             Intent i = new Intent(TareaDef.this, EditorTareas.class);
+                            i.putExtra("idRutina",idRutina);
                             startActivity(i);
                         }
                     })

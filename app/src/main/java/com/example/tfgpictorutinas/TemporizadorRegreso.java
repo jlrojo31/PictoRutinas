@@ -20,6 +20,12 @@ public class TemporizadorRegreso extends BroadcastReceiver {
         Toast.makeText(context,"Regreso de alarma",Toast.LENGTH_SHORT).show();
 
         MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.sd_alert4);
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+            public void onCompletion(MediaPlayer mp) {
+                mediaPlayer.release();
+            }
+        });
         mediaPlayer.start();
 
         Intent homeAlumno = new Intent(context, HomeAlumno.class);

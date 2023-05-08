@@ -209,10 +209,12 @@ public class HomeAlumno extends AppCompatActivity {
                             tareaPosterior = tarea.getIdTarea();
                         }
                     }else {//No hay más tareas posteriores
-                        Date diaPosterior = dateFormat.parse("11:59 PM");
-                        horaPosteriorFormato = diaPosterior;
-                        horaPosterior = "11:59 PM";
-                        tareaPosterior = 0L;
+                        if (horaPosteriorFormato == null) {
+                            Date diaPosterior = dateFormat.parse("11:59 PM");
+                            horaPosteriorFormato = diaPosterior;
+                            horaPosterior = "11:59 PM";
+                            tareaPosterior = 0L;
+                        }
                     }
 
                 }

@@ -69,6 +69,12 @@ public class TareaEnCurso extends AppCompatActivity {
         DatabaseReference refTareas = database.getReference().child("pictorutinas").child("tareas");
 
         MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.sd_alert3);
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+            public void onCompletion(MediaPlayer mp) {
+                mediaPlayer.release();
+            }
+        });
         mediaPlayer.start();
 
         idTareaEnCurso.setOnClickListener(new View.OnClickListener() {
