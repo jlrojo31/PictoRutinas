@@ -24,13 +24,13 @@ public class TemporizadorRegreso extends BroadcastReceiver {
 
             public void onCompletion(MediaPlayer mp) {
                 mediaPlayer.release();
+                Intent homeAlumno = new Intent(context, HomeAlumno.class);
+                homeAlumno.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | FLAG_ACTIVITY_CLEAR_TASK);
+                context.startActivity(homeAlumno);
             }
         });
         mediaPlayer.start();
 
-        Intent homeAlumno = new Intent(context, HomeAlumno.class);
-        homeAlumno.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | FLAG_ACTIVITY_CLEAR_TASK);
-        context.startActivity(homeAlumno);
     }
 
     public void setAlarm(Context context, Calendar cal){

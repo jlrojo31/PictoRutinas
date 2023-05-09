@@ -68,15 +68,6 @@ public class TareaEnCurso extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference refTareas = database.getReference().child("pictorutinas").child("tareas");
 
-        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.sd_alert3);
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-
-            public void onCompletion(MediaPlayer mp) {
-                mediaPlayer.release();
-            }
-        });
-        mediaPlayer.start();
-
         idTareaEnCurso.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -150,7 +141,15 @@ public class TareaEnCurso extends AppCompatActivity {
                         }
                     }
                 };
-                t.start();
+                MediaPlayer mediaPlayer = MediaPlayer.create(TareaEnCurso.this, R.raw.sd_alert3);
+                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+                    public void onCompletion(MediaPlayer mp) {
+                        mediaPlayer.release();
+                        t.start();
+                    }
+                });
+                mediaPlayer.start();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
