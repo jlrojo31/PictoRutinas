@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.app.TimePickerDialog;
@@ -16,15 +15,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.text.format.Time;
 import android.util.Base64;
-import android.view.MenuInflater;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -43,12 +38,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -65,8 +57,7 @@ public class TareaDef extends AppCompatActivity {
     Bundle extras;
     String HORA ;
 
-    TextView hora_ini;
-    TextView hora_end;
+    TextView duracion;
     EditText et_descripcion;
     Button btn_actualizar;
 
@@ -74,6 +65,9 @@ public class TareaDef extends AppCompatActivity {
     private long idRutina;
     private String key;
     private long idTarea;
+    private String nombreRut;
+    private String tarea_hora_ini;
+    private String tarea_hora_fin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,34 +80,28 @@ public class TareaDef extends AppCompatActivity {
 
         picto = findViewById(R.id.fotoTareaDef);
 
-        hora_ini = findViewById(R.id.tiempoTareaDef_ini);
-        hora_end = findViewById(R.id.tiempoTareaDef_end);
+        duracion = findViewById(R.id.tiempoTareaDef_end);
 
         et_descripcion = findViewById(R.id.EtDescripcionTareaDef);
         btn_actualizar = findViewById(R.id.idBtActualizarTarea);
 
 
         extras = getIntent().getExtras();
+        
         idRutina = extras.getLong("idRutina");
         idTarea = extras.getLong("idTarea");
         key=extras.getString("key");
-        int is_old = extras.getInt("is_old");
-        if(is_old==1){
+
+        nombreRut = extras.getString("nombre");
+        if(key != null ){
             showdata();
         }else{
-            btn_actualizar.setText("Añadir tarea");
             setHoraActual();
         }
-        hora_ini.setOnClickListener(new View.OnClickListener() {
+        duracion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                abrirTimePicker(v,hora_ini);
-            }
-        });
-        hora_end.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                abrirTimePicker(v,hora_end);
+                abrirTimePicker(v, duracion);
             }
         });
 
@@ -121,15 +109,15 @@ public class TareaDef extends AppCompatActivity {
         btn_actualizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(is_old==1){
+                if(key!=null){
                     try {
-                        updateTarea(picto,hora_end,hora_ini,et_descripcion);
+                        updateTarea(picto, duracion,et_descripcion);
                     } catch (ParseException e) {
                         throw new RuntimeException(e);
                     }
                 }else{
                     try {
-                        guardardataNew(picto,hora_end,hora_ini,et_descripcion);
+                        guardardataNew(picto, duracion,et_descripcion);
                     } catch (ParseException e) {
                         throw new RuntimeException(e);
                     }
@@ -137,62 +125,105 @@ public class TareaDef extends AppCompatActivity {
             }
         });
     }
-
     private void showdata() {
         extras = getIntent().getExtras();
-
         idRutina = extras.getLong("idRutina");
         idTarea = extras.getLong("idTarea");
-
         String tarea_picto = extras.getString("tarea_picto");
         String tarea_descripcion = extras.getString("tarea_descripcion");
-        String tarea_hora_ini = extras.getString("tarea_hora_ini");
-        String tarea_hora_end = extras.getString("tarea_hora_end");
-
+        tarea_hora_ini = extras.getString("tarea_hora_ini");
+        tarea_hora_fin = extras.getString("tarea_hora_end");
 
         byte[] imageAsBytes = Base64.decode(tarea_picto, Base64.DEFAULT);
         picto.setImageBitmap((BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length)));
-
-        hora_ini.setText(tarea_hora_ini);
-        hora_end.setText(tarea_hora_end);
-
         et_descripcion.setText(tarea_descripcion);
+        try {
+            texto_duracion(tarea_hora_fin,tarea_hora_ini);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
         btn_actualizar.setText("Actualizar");
 
     }
-    private void updateTarea(ImageView picto, TextView hora_end, TextView hora_ini, EditText et_descripcion) throws ParseException {
+
+    private void texto_duracion(String tarea_hora_end, String tarea_hora_ini) throws ParseException {
+        String duracion_txt="";
+        SimpleDateFormat sdf = new SimpleDateFormat("h:mm a");
+        Date ini_hora=sdf.parse(tarea_hora_ini) ;
+        Date fin_hora =sdf.parse(tarea_hora_end);
+        Date duracion_end;
+        duracion_end= new Date(fin_hora.getTime()-ini_hora.getTime());
+        SimpleDateFormat st = new SimpleDateFormat("HH:mm");
+        int hora = duracion_end.getHours();
+        int min = duracion_end.getMinutes();
+        String minute_f;
+        String hour_f;
+        if(min<10){
+            minute_f= "0"+min;
+        }else {
+            minute_f= String.valueOf(min);
+        }
+        if(hora<10){
+            hour_f= "0"+hora;
+        }else {
+            hour_f= String.valueOf(hora);
+        }
+        //Showing the picked value in the textView
+        //hora.setText(String.valueOf(hour)+ ":"+String.valueOf(minute)+" "+am_pm);
+        String horas = hour_f+ ":"+minute_f;
+        duracion.setText(horas);
+    }
+
+    private void updateTarea(ImageView picto, TextView hora_end, EditText et_descripcion) throws ParseException {
 
         Map<String,Object> map = new HashMap<>();
         map.put("idTarea",idTarea);
         map.put("nombreTarea",et_descripcion.getText().toString());
         map.put("fotoTarea",getBitstreamPicto( picto));
-        map.put("hora_ini",hora_ini.getText().toString());
-        map.put("hora_end",hora_end.getText().toString());
+        map.put("hora_ini",tarea_hora_ini);
+        map.put("hora_end",getHoraEnd());
         map.put("rutina_id",idRutina);
-        if(datoscorectos()){
-            mDataBase.child("pictorutinas/tareas").child(key).updateChildren(map)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-                            Toast.makeText(TareaDef.this,"Tarea actualizada",Toast.LENGTH_SHORT).show();
-                            Intent i = new Intent(TareaDef.this, EditorTareas.class);
-                            i.putExtra("idRutina",idRutina);
-                            startActivity(i);
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(TareaDef.this,"ERROR",Toast.LENGTH_SHORT).show();
 
-                        }
-                    });
-        }
+        mDataBase.child("pictorutinas/tareas").child(key).updateChildren(map)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(TareaDef.this,"Tarea actualizada",Toast.LENGTH_SHORT).show();
+                        Intent i = new Intent(TareaDef.this, EditorTareas.class);
+                        i.putExtra("idRutina",idRutina);
+                        i.putExtra("nombre",nombreRut);
+                        Log.d("TAG",nombreRut);
+                        startActivity(i);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(TareaDef.this,"ERROR",Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+
+
     }
+
+    private String getHoraEnd() throws ParseException {
+        String hora;
+        Date date1 = get_date(tarea_hora_ini);
+        SimpleDateFormat st = new SimpleDateFormat("hh:mm");
+        Date date2 = st.parse(duracion.getText().toString());
+        Date date_resul = new Date(date1.getTime()+date2.getTime());
+        Log.d("TAG","duracion: "+date2);
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
+        hora = sdf.format(date_resul);
+        Log.d("TAG","hora: "+hora);
+        return hora;
+    }
+
     private boolean datoscorectos() throws ParseException {
         boolean datos_correctos;
-        Date date1 = get_date(String.valueOf(hora_ini.getText()));
-        Date date2 = get_date(String.valueOf(hora_end.getText()));
+        Date date1 = get_date(tarea_hora_ini);
+        Date date2 = get_date(String.valueOf(duracion.getText()));
         if(date1.before(date2)){
             datos_correctos = true;
         }else {
@@ -206,35 +237,29 @@ public class TareaDef extends AppCompatActivity {
         Date date = sdf.parse(hour);
         return date;
     }
-    private void  guardardataNew(ImageView picto, TextView hora_end, TextView hora_ini, EditText et_descripcion) throws ParseException {
+    private void  guardardataNew(ImageView picto, TextView hora_end, EditText et_descripcion) throws ParseException {
         String tarea_picto= getBitstreamPicto( picto);
-        String tarea_hora_ini= hora_ini.getText().toString();
-        String tarea_hora_end= hora_end.getText().toString();
         String tarea_descripcion= et_descripcion.getText().toString();
-        if(tarea_picto.isEmpty() ||  tarea_hora_ini.isEmpty() || tarea_hora_end.isEmpty() || tarea_descripcion.isEmpty() || !datoscorectos()){
+        if(tarea_picto.isEmpty() ||  tarea_hora_ini.isEmpty() || tarea_descripcion.isEmpty()||duracion.getText().toString().isEmpty() ){
             String error = "";
             if (tarea_picto.isEmpty())
                 error="PICTOGRAMA";
-            if (tarea_picto.isEmpty())
+            if (tarea_hora_ini.isEmpty())
                 error="HORA DE INICIO";
-            if (tarea_picto.isEmpty())
-                error="HORA DE FINALIZACIÓN";
-            if (tarea_picto.isEmpty())
+            if (tarea_descripcion.isEmpty())
                 error="DESCRIPCION";
-            if (tarea_picto.isEmpty())
-                error="RUTINA";
-            if (!datoscorectos())
-                error="HORAS ERRONEAS";
-            Toast.makeText(this,"Falta"+error+" datos por definir",Toast.LENGTH_SHORT).show();
+            if (tarea_hora_fin.isEmpty())
+                error="HORA DE FINALIZACIÓN";
 
+            Toast.makeText(this,"Falta"+error+" datos por definir",Toast.LENGTH_SHORT).show();
         }else {
 
             Map<String,Object> map = new HashMap<>();
             map.put("idTarea",idTarea);
             map.put("nombreTarea",et_descripcion.getText().toString());
             map.put("fotoTarea",getBitstreamPicto( picto));
-            map.put("hora_ini",hora_ini.getText().toString());
-            map.put("hora_end",hora_end.getText().toString());
+            map.put("hora_ini",tarea_hora_ini);
+            map.put("hora_end",getHoraEnd());
             map.put("rutina_id",idRutina);
 
             mDataBase.child("pictorutinas/tareas").push()
@@ -245,6 +270,8 @@ public class TareaDef extends AppCompatActivity {
                             Toast.makeText(TareaDef.this,"Tarea guardada",Toast.LENGTH_SHORT).show();
                             Intent i = new Intent(TareaDef.this, EditorTareas.class);
                             i.putExtra("idRutina",idRutina);
+                            i.putExtra("nombre",nombreRut);
+                            Log.d("TAG",nombreRut);
                             startActivity(i);
                         }
                     })
@@ -265,35 +292,38 @@ public class TareaDef extends AppCompatActivity {
         return pic;
     }
     private void setHoraActual() {
+        btn_actualizar.setText("Añadir tarea");
         Date date = new Date(String.valueOf(Calendar.getInstance().getTime()));
         DateFormat dateFormat = new SimpleDateFormat("h:mm a");
-        hora_ini.setText(dateFormat.format(date));
-        hora_end.setText(dateFormat.format(date));
+        idRutina = extras.getLong("idRutina");
+        tarea_hora_ini = extras.getString("tarea_hora_ini");
+        duracion.setText(dateFormat.format(date));
     }
     public void abrirTimePicker(View v, TextView hour_) {
         TimePickerDialog timePickerDialog = new TimePickerDialog(this, android.R.style.Theme_Holo_Light_Dialog,new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-                String am_pm = "AM";
+
                 String minute_f;
-                if(hour>12){
-                    am_pm = "PM";
-                    hour = hour-12;
-                }if(hour==12){
-                    am_pm= "PM";
-                }
+                String hour_f;
+
                 //añadir 00;
-                if(minute == 0){
-                    minute_f= "00";
+                if(minute<10){
+                    minute_f= "0"+minute;
                 }else {
                     minute_f= String.valueOf(minute);
                 }
+                if(hour<10){
+                    hour_f= "0"+hour;
+                }else {
+                    hour_f= String.valueOf(hour);
+                }
                 //Showing the picked value in the textView
                 //hora.setText(String.valueOf(hour)+ ":"+String.valueOf(minute)+" "+am_pm);
-                String hora = hour+ ":"+minute_f+" "+am_pm;
+                String hora = hour_f+ ":"+minute_f;
                 hour_.setText(hora);
             }
-        }, 12, 00, false);
+        }, 00, 00, true);
 
         timePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
@@ -359,12 +389,12 @@ public class TareaDef extends AppCompatActivity {
         } else if(resultCode == RESULT_OK && requestCode == TOMAR_FOTO) {
             picto.setImageURI(imagenUri);
         }else if(resultCode == RESULT_OK && requestCode == ARRASAC) {
-                String imagen;
-                imagen = data.getStringExtra("imagen");
-                if (imagen!=null) {
-                    byte[] imageAsBytes = Base64.decode(imagen, Base64.DEFAULT);
-                    picto.setImageBitmap((BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length)));
-                }
+            String imagen;
+            imagen = data.getStringExtra("imagen");
+            if (imagen!=null) {
+                byte[] imageAsBytes = Base64.decode(imagen, Base64.DEFAULT);
+                picto.setImageBitmap((BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length)));
+            }
         }
     }
 }

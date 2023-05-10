@@ -1,5 +1,7 @@
 package com.example.tfgpictorutinas;
 
+import static androidx.core.app.ActivityCompat.startActivityForResult;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -27,13 +29,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 
 public class AdaptadorTareas extends FirebaseRecyclerAdapter<Tarea,AdaptadorTareas.myViewHolder> {
-   /* protected Activity activity;
-    protected ArrayList<Tarea> tareas;
-    int p;
-    Tarea t;*/
 
     /**
      * Initialize a {@link RecyclerView.Adapter} that listens to a Firebase query. See
@@ -41,8 +40,11 @@ public class AdaptadorTareas extends FirebaseRecyclerAdapter<Tarea,AdaptadorTare
      *
      * @param options
      */
-    public AdaptadorTareas(@NonNull FirebaseRecyclerOptions<Tarea> options) {
+
+    private Context mContext;
+    public AdaptadorTareas(@NonNull FirebaseRecyclerOptions<Tarea> options, Context context) {
         super(options);
+        this.mContext =context;
     }
 
     @Override
@@ -53,24 +55,42 @@ public class AdaptadorTareas extends FirebaseRecyclerAdapter<Tarea,AdaptadorTare
         byte[] imageAsBytes = Base64.decode(model.getFotoTarea(), Base64.DEFAULT);
         holder.picto.setImageBitmap((BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length)));
 
+        if (mContext instanceof EditorTareas) {
+            try {
+                if(position== 0){
+                    ((EditorTareas)mContext).setHora();
+                }if(position==1){
+                    ((EditorTareas)mContext).actualizarHoras();
+                }
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+        }
         holder.editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+
                 Intent intent = new Intent(holder.editButton.getContext(), TareaDef.class);
+                String ant_key;
+                if (position>1){
+                    intent.putExtra("antkey",String.valueOf((getRef(position-1).getKey())));
+                }
+                String name_tar="";
 
-                intent.putExtra("is_old",1);
-
+                if (mContext instanceof EditorTareas) {
+                    name_tar = ((EditorTareas)mContext).get_name();
+                }
                 intent.putExtra("idTarea", model.getIdTarea());
                 intent.putExtra("idRutina", model.getRutina_id());
-
                 intent.putExtra("tarea_picto", model.getFotoTarea());
                 intent.putExtra("tarea_descripcion", model.getNombreTarea());
                 intent.putExtra("tarea_hora_ini", model.getHora_ini());
                 intent.putExtra("tarea_hora_end", model.getHora_end());
+                intent.putExtra("nombre", name_tar);
                 intent.putExtra("key", String.valueOf((getRef(position).getKey())));
-
                 holder.editButton.getContext().startActivity(intent);
+
             }
         });
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {
@@ -84,6 +104,13 @@ public class AdaptadorTareas extends FirebaseRecyclerAdapter<Tarea,AdaptadorTare
                     public void onClick(DialogInterface dialog, int which) {
                         FirebaseDatabase.getInstance().getReference().child("pictorutinas")
                                 .child("tareas").child(getRef(position).getKey()).removeValue();
+                        if (mContext instanceof EditorTareas) {
+                            try {
+                                ((EditorTareas)mContext).actualizarHoras();
+                            } catch (ParseException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
                         Toast.makeText(holder.descripcion.getContext(),"La tarea"+model.getNombreTarea()+" se ha eliminado",Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -127,81 +154,4 @@ public class AdaptadorTareas extends FirebaseRecyclerAdapter<Tarea,AdaptadorTare
         }
     }
 }
-    /*
-    public AdaptadorTareas(Activity activity, ArrayList<Tarea> tareas){
-        this.activity = activity;
-        this.tareas = tareas;
-    }
-
-    public void setTarea(int i, Tarea t) {tareas.set(i,t);}
-
-    @Override
-    public int getCount() {
-        return tareas.size();
-    }
-
-    @Override
-    public Tarea getItem(int i) {
-        return tareas.get(i);
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return tareas.get(i).idTarea;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        final ViewHolderTarea holder;
-        View vi = convertView;
-
-        if(vi == null) {
-            holder = new ViewHolderTarea();
-        }else {
-            holder = (ViewHolderTarea) vi.getTag();
-        }
-
-        LayoutInflater inflater = (LayoutInflater) activity
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        vi = inflater.inflate(R.layout.item_tarea, null);
-
-        holder.deleteButton = (Button) vi.findViewById(R.id.idBtnBTarea);
-        holder.deleteButton.setTag(position);
-        holder.editButton = (Button) vi.findViewById(R.id.idBtnETarea);
-        holder.editButton.setTag(position);
-        holder.textView = (TextView) vi.findViewById(R.id.idNomTarea);
-        holder.textView.setTag(position);
-        holder.imageView = (ImageView) vi.findViewById(R.id.fotoTarea);
-        holder.imageView.setTag(position);
-        //holder.iresource failed to call closemage.setImageResource(); //todo revisar
-        vi.setTag(holder);
-
-        int tag_DeleteButton_position=(Integer) holder.deleteButton.getTag();
-        holder.deleteButton.setId(tag_DeleteButton_position);
-        int tag_EditButton_position=(Integer) holder.editButton.getTag();
-        holder.editButton.setId(tag_EditButton_position);
-        int tag_ImageView_position=(Integer) holder.imageView.getTag();
-        holder.imageView.setId(tag_ImageView_position);
-        int tag_TextView_position=(Integer) holder.textView.getTag();
-        holder.textView.setId(tag_TextView_position);
-
-
-        holder.editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(holder.editButton.getContext(), TareaDef.class);
-                i.putExtra("idTarea", holder.textView.getId()); // Todo habra que dejar un id de bbdd para pasar a la siguiente pantalla
-                holder.imageView.getContext().startActivity(i);
-            }
-        });
-        return vi;
-    }
-}
-
-class ViewHolderTarea {
-    Button deleteButton;
-    Button editButton;
-    ImageView imageView;
-    TextView textView;
-}*/
 
