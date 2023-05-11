@@ -77,11 +77,7 @@ public class EditorTareas extends AppCompatActivity {
         extras = getIntent().getExtras();
         id_rutina = extras.getLong("idRutina");
         String nombre = extras.getString("nombre");
-        Log.d("TAG",nombre);
         nombrerutina.setText(nombre);
-        // Get a reference to your user
-// Attach a listener to read the data at your profile reference
-
         new_tarea.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,31 +96,28 @@ public class EditorTareas extends AppCompatActivity {
                             autoincrementid = ((Tarea)listaTareas.get(listaTareas.size()-1)).getIdTarea();
                             long id_new_tarea = autoincrementid+1;
                             Intent intent = new Intent(EditorTareas.this, TareaDef.class);
-
                             intent.putExtra("is_old",0);
                             intent.putExtra("idTarea",id_new_tarea);
                             intent.putExtra("idRutina", id_rutina);
                             SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a", Locale.US);
                             String horaAntfin = adaptadorTareas.getItem(adaptadorTareas.getItemCount()-1).getHora_end();
                             intent.putExtra("tarea_hora_ini",horaAntfin);
-                            Log.d("TAG",horaAntfin);
-
+                            Log.d("TAG", "valor id:"+String.valueOf(listaTareas.size()));
                             startActivity(intent);
                         }else if (!hora_ini_rut.getText().toString().isEmpty()){
                             autoincrementid = ((Tarea)listaTareas.get(listaTareas.size()-1)).getIdTarea();
                             long id_new_tarea = autoincrementid+1;
                             Intent intent = new Intent(EditorTareas.this, TareaDef.class);
-
                             intent.putExtra("is_old",0);
                             intent.putExtra("idTarea",id_new_tarea);
                             intent.putExtra("idRutina", id_rutina);
                             SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a",Locale.US);
                             String horaAntfin = hora_ini_rut.getText().toString();
                             intent.putExtra("tarea_hora_ini",horaAntfin);
-                            Log.d("TAG",horaAntfin);
+                            Log.d("TAG","valor id:"+String.valueOf(listaTareas.size()));
                             startActivity(intent);
                         }else{
-                            Log.d("TAG","NO HAY HORA INICIALIZADA");
+                            Toast.makeText(EditorTareas.this,"NO HAY HORA INICIALIZADA",Toast.LENGTH_SHORT).show();
                         }
 
                     }
@@ -190,51 +183,6 @@ public class EditorTareas extends AppCompatActivity {
         timePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         timePickerDialog.show();
-    }
-
-    private void updateHora(String hora) throws ParseException {
-        /*if(adaptadorTareas.getItemCount()>0){
-            Query query = FirebaseDatabase.getInstance().getReference()
-                    .child("pictorutinas").child("tareas")
-                    .orderByChild("rutina_id").equalTo(id_rutina);
-            SimpleDateFormat sdf = new SimpleDateFormat("h:mm a");
-            Date hora_inicial = sdf.parse(hora_ini_rut.getText().toString());
-            Map<String, Object> update = new HashMap<>();
-            query.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    int count = 0;
-                    for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                        update.put("hora_ini", sdf.format(hora_inicial));
-                        DatabaseReference referencia =
-                                FirebaseDatabase.getInstance().getReference().child("pictorutinas")
-                                        .child("tareas").child(childSnapshot.getRef().getKey());
-                        referencia.updateChildren(update);
-                    }
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-        }*/
-    }
-    private void setNew_tarea(){
-        Intent intent = new Intent(EditorTareas.this, TareaDef.class);
-        if (listaTareas.size() > 0) autoincrementid = ((Tarea)listaTareas.get(listaTareas.size()-1)).getIdTarea();
-        long id_new_tarea = autoincrementid+1;
-        intent.putExtra("is_old",0);
-        intent.putExtra("idTarea",id_new_tarea);
-        intent.putExtra("idRutina", id_rutina);
-        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a",Locale.US);
-        if(hora_ini_rut.getText().toString().isEmpty()){
-            Log.d("TAG","No hay hora");
-        }else{
-            String horaAntfin = hora_ini_rut.getText().toString();
-            intent.putExtra("tarea_hora_ini",horaAntfin);
-            Log.d("TAG",horaAntfin);
-            startActivity(intent);
-        }
     }
 
     public void actualizarHoras() throws ParseException {
@@ -332,13 +280,13 @@ public class EditorTareas extends AppCompatActivity {
         adaptadorTareas.startListening();
     }
 
-
-
     @Override
     protected void onStop() {
         super.onStop();
         adaptadorTareas.stopListening();
-
+        finish();
     }
+
+
 
 }

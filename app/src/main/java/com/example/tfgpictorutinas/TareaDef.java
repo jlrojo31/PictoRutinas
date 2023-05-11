@@ -6,8 +6,10 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -402,6 +404,30 @@ public class TareaDef extends AppCompatActivity {
                 picto.setImageBitmap((BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length)));
             }
         }
+    }
+
+    private void doExit() {
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(TareaDef.this);
+        alertDialog.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent i = new Intent(TareaDef.this, EditorTareas.class);
+                i.putExtra("idRutina",idRutina);
+                i.putExtra("nombre",nombreRut);
+                startActivity(i);
+                finish();
+            }
+        });
+        alertDialog.setNegativeButton("No", null);
+
+        alertDialog.setMessage("Estas seguro de salir?");
+        alertDialog.setTitle("Saliendo de edición");
+        alertDialog.show();
+    }
+    @Override
+    public void onBackPressed() {
+        doExit();
     }
 }
 
