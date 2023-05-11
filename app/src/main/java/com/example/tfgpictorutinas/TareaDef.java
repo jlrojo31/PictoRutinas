@@ -93,7 +93,6 @@ public class TareaDef extends AppCompatActivity {
         
         idRutina = extras.getLong("idRutina");
         idTarea = extras.getLong("idTarea");
-        Toast.makeText(TareaDef.this,"Tarea:"+idTarea,Toast.LENGTH_SHORT).show();
         key=extras.getString("key");
 
         nombreRut = extras.getString("nombre");
@@ -191,7 +190,6 @@ public class TareaDef extends AppCompatActivity {
         map.put("hora_ini",tarea_hora_ini);
         map.put("hora_end",getHoraEnd());
         map.put("rutina_id",idRutina);
-        Toast.makeText(TareaDef.this,"Tarea MAp:"+idTarea,Toast.LENGTH_SHORT).show();
         mDataBase.child("pictorutinas/tareas").child(key).updateChildren(map)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -272,7 +270,6 @@ public class TareaDef extends AppCompatActivity {
             map.put("hora_ini",tarea_hora_ini);
             map.put("hora_end",getHoraEnd());
             map.put("rutina_id",idRutina);
-            Toast.makeText(TareaDef.this,"Tarea new:"+idTarea,Toast.LENGTH_SHORT).show();
 
             mDataBase.child("pictorutinas/tareas").push()
                     .setValue(map)
@@ -426,6 +423,10 @@ public class TareaDef extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         doExit();
+    }
+    protected void onStop() {
+        super.onStop();
+        finish();
     }
 }
 
