@@ -102,6 +102,7 @@ public class EditorTareas extends AppCompatActivity {
                             SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a", Locale.US);
                             String horaAntfin = adaptadorTareas.getItem(adaptadorTareas.getItemCount()-1).getHora_end();
                             intent.putExtra("tarea_hora_ini",horaAntfin);
+                            Log.d("TAG","valor id:"+String.valueOf(autoincrementid));
                             Log.d("TAG", "valor id:"+String.valueOf(listaTareas.size()));
                             startActivity(intent);
                         }else if (!hora_ini_rut.getText().toString().isEmpty()){
@@ -114,7 +115,9 @@ public class EditorTareas extends AppCompatActivity {
                             SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a",Locale.US);
                             String horaAntfin = hora_ini_rut.getText().toString();
                             intent.putExtra("tarea_hora_ini",horaAntfin);
-                            Log.d("TAG","valor id:"+String.valueOf(listaTareas.size()));
+                            Log.d("TAG","valor incre:"+String.valueOf(autoincrementid));
+                            Log.d("TAG","valor ruti:"+String.valueOf(id_new_tarea));
+                            Log.d("TAG","valor lista:"+String.valueOf(listaTareas.size()));
                             startActivity(intent);
                         }else{
                             Toast.makeText(EditorTareas.this,"NO HAY HORA INICIALIZADA",Toast.LENGTH_SHORT).show();
@@ -225,8 +228,7 @@ public class EditorTareas extends AppCompatActivity {
                                     update.put("hora_ini", sdf.format(ini_hora));
                                 if(sdf.format(fin_hora)!= fin_hora.toString())
                                     update.put("hora_end",sdf.format(fin_hora));
-                                if(adaptadorTareas.getItem(count).getIdTarea()!= count)
-                                    update.put("idTarea",count);
+
                                 Log.d("TAG","fin_hora_0: "+fin_hora.toString());
                                 Log.d("TAG","ini_hora_0: "+ini_hora.toString());
                                 Log.d("TAG","duracion_hora_0: "+duracion.toString());
@@ -242,8 +244,6 @@ public class EditorTareas extends AppCompatActivity {
                                     update.put("hora_ini", sdf.format(ini_hora));
                                 if(sdf.format(fin_hora)!= fin_hora.toString())
                                     update.put("hora_end",sdf.format(fin_hora));
-                                if(adaptadorTareas.getItem(count).getIdTarea()!= count)
-                                    update.put("idTarea",count);
                                 Log.d("TAG","fin_hora: "+fin_hora.toString());
                                 Log.d("TAG","ini_hora: "+ini_hora.toString());
                                 Log.d("TAG","duracion: "+duracion.toString());
