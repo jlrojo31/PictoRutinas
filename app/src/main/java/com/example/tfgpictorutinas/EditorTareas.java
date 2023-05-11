@@ -271,6 +271,7 @@ public class EditorTareas extends AppCompatActivity {
 
                             if (count==0){
                                 ini_hora = hora_inicial;
+
                                 fin_hora = new Date(ini_hora.getTime()+duracion.getTime());
                                 if(sdf.format(ini_hora)!= ini_old.toString())
                                     update.put("hora_ini", sdf.format(ini_hora));
@@ -284,6 +285,10 @@ public class EditorTareas extends AppCompatActivity {
                             }
                             else {
                                 ini_hora=fin_hora;
+                                Calendar cal= Calendar.getInstance();
+                                cal.setTime(ini_hora);
+                                cal.add(Calendar.MINUTE,1);
+                                ini_hora = (cal.getTime());
                                 fin_hora = new Date(ini_hora.getTime()+duracion.getTime());
                                 if(sdf.format(ini_hora)!= ini_old.toString())
                                     update.put("hora_ini", sdf.format(ini_hora));
