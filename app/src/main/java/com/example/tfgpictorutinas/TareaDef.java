@@ -293,8 +293,11 @@ public class TareaDef extends AppCompatActivity {
     }
     private String getBitstreamPicto(ImageView picto){
         Bitmap bitmap = ((BitmapDrawable) picto.getDrawable()).getBitmap();
+        int width= bitmap.getWidth();
+        int height=bitmap.getHeight();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,5,byteArrayOutputStream);
+        if (width<=500 && height<=500) bitmap.compress(Bitmap.CompressFormat.PNG,100,byteArrayOutputStream);
+        else bitmap.compress(Bitmap.CompressFormat.JPEG,5,byteArrayOutputStream);
         byte[] byteArray = byteArrayOutputStream.toByteArray();
         String pic = Base64.encodeToString(byteArray,Base64.DEFAULT);
         return pic;
