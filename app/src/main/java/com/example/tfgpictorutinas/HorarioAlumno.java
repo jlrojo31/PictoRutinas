@@ -61,10 +61,6 @@ public class HorarioAlumno extends AppCompatActivity {
                             }
                         }
 
-
-
-
-
                         adapter = new AdaptadorHorariosAlumno(HorarioAlumno.this, rutina, dias);
                         list.setAdapter(adapter);
                     }

@@ -302,11 +302,9 @@ public class TareaDef extends AppCompatActivity {
     }
     private void setHoraActual() {
         btn_actualizar.setText("Añadir tarea");
-        Date date = new Date(String.valueOf(Calendar.getInstance().getTime()));
-        DateFormat dateFormat = new SimpleDateFormat("h:mm a", Locale.US);
         idRutina = extras.getLong("idRutina");
         tarea_hora_ini = extras.getString("tarea_hora_ini");
-        duracion.setText(dateFormat.format(date));
+
     }
     public void abrirTimePicker(View v, TextView hour_) {
         TimePickerDialog timePickerDialog = new TimePickerDialog(this, android.R.style.Theme_Holo_Light_Dialog,new TimePickerDialog.OnTimeSetListener() {
