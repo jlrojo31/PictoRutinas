@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -103,7 +104,7 @@ public class EditorTareas extends AppCompatActivity {
                             intent.putExtra("is_old",0);
                             intent.putExtra("idTarea",id_new_tarea);
                             intent.putExtra("idRutina", id_rutina);
-                            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
+                            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a", Locale.US);
                             String horaAntfin = adaptadorTareas.getItem(adaptadorTareas.getItemCount()-1).getHora_end();
                             intent.putExtra("tarea_hora_ini",horaAntfin);
                             Log.d("TAG",horaAntfin);
@@ -117,7 +118,7 @@ public class EditorTareas extends AppCompatActivity {
                             intent.putExtra("is_old",0);
                             intent.putExtra("idTarea",id_new_tarea);
                             intent.putExtra("idRutina", id_rutina);
-                            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
+                            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a",Locale.US);
                             String horaAntfin = hora_ini_rut.getText().toString();
                             intent.putExtra("tarea_hora_ini",horaAntfin);
                             Log.d("TAG",horaAntfin);
@@ -225,7 +226,7 @@ public class EditorTareas extends AppCompatActivity {
         intent.putExtra("is_old",0);
         intent.putExtra("idTarea",id_new_tarea);
         intent.putExtra("idRutina", id_rutina);
-        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a",Locale.US);
         if(hora_ini_rut.getText().toString().isEmpty()){
             Log.d("TAG","No hay hora");
         }else{
@@ -239,7 +240,7 @@ public class EditorTareas extends AppCompatActivity {
     public void actualizarHoras() throws ParseException {
 
         if(adaptadorTareas.getItemCount()>0 && !hora_ini_rut.getText().toString().isEmpty()) {
-            SimpleDateFormat sdf = new SimpleDateFormat("h:mm a");
+            SimpleDateFormat sdf = new SimpleDateFormat("h:mm a",Locale.US);
             Query query = FirebaseDatabase.getInstance().getReference()
                     .child("pictorutinas").child("tareas")
                     .orderByChild("rutina_id").equalTo(id_rutina);
@@ -315,12 +316,10 @@ public class EditorTareas extends AppCompatActivity {
 
         }
     }
-    public void setHora() throws ParseException {
-        if(adaptadorTareas.getItemCount()>0){
+    public void setHora() {
             String date_ini_rut = adaptadorTareas.getItem(0).getHora_ini();
             Log.d("TAG", "sethora"+date_ini_rut);
             hora_ini_rut.setText(date_ini_rut);
-        }
     }
     @Override
     protected void onStart() {

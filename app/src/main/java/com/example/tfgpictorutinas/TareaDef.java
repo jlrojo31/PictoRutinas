@@ -44,6 +44,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class TareaDef extends AppCompatActivity {
@@ -148,12 +149,16 @@ public class TareaDef extends AppCompatActivity {
 
     private void texto_duracion(String tarea_hora_end, String tarea_hora_ini) throws ParseException {
         String duracion_txt="";
-        SimpleDateFormat sdf = new SimpleDateFormat("h:mm a");
+        SimpleDateFormat sdf = new SimpleDateFormat("h:mm a",Locale.US);
         Date ini_hora=sdf.parse(tarea_hora_ini) ;
         Date fin_hora =sdf.parse(tarea_hora_end);
+        Calendar duracion_cal = Calendar.getInstance();
+        duracion_cal.setTime(fin_hora);
+        duracion_cal.add(Calendar.HOUR,-ini_hora.getHours());
+        duracion_cal.add(Calendar.MINUTE,-ini_hora.getMinutes());
         Date duracion_end;
-        duracion_end= new Date(fin_hora.getTime()-ini_hora.getTime());
-        SimpleDateFormat st = new SimpleDateFormat("HH:mm");
+        duracion_end= duracion_cal.getTime();
+        SimpleDateFormat st = new SimpleDateFormat("HH:mm",Locale.US);
         int hora = duracion_end.getHours();
         int min = duracion_end.getMinutes();
         String minute_f;
@@ -210,11 +215,15 @@ public class TareaDef extends AppCompatActivity {
     private String getHoraEnd() throws ParseException {
         String hora;
         Date date1 = get_date(tarea_hora_ini);
-        SimpleDateFormat st = new SimpleDateFormat("hh:mm");
+        SimpleDateFormat st = new SimpleDateFormat("hh:mm",Locale.US);
         Date date2 = st.parse(duracion.getText().toString());
-        Date date_resul = new Date(date1.getTime()+date2.getTime());
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date1);
+        calendar.add(Calendar.HOUR,date2.getHours());
+        calendar.add(Calendar.MINUTE,date2.getMinutes());
+        Date date_resul = calendar.getTime();
         Log.d("TAG","duracion: "+date2);
-        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a",Locale.US);
         hora = sdf.format(date_resul);
         Log.d("TAG","hora: "+hora);
         return hora;
@@ -233,7 +242,7 @@ public class TareaDef extends AppCompatActivity {
         return datos_correctos;
     }
     private Date get_date(String hour) throws ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat("h:mm a");
+        SimpleDateFormat sdf = new SimpleDateFormat("h:mm a",Locale.US);
         Date date = sdf.parse(hour);
         return date;
     }
@@ -294,7 +303,7 @@ public class TareaDef extends AppCompatActivity {
     private void setHoraActual() {
         btn_actualizar.setText("Añadir tarea");
         Date date = new Date(String.valueOf(Calendar.getInstance().getTime()));
-        DateFormat dateFormat = new SimpleDateFormat("h:mm a");
+        DateFormat dateFormat = new SimpleDateFormat("h:mm a", Locale.US);
         idRutina = extras.getLong("idRutina");
         tarea_hora_ini = extras.getString("tarea_hora_ini");
         duracion.setText(dateFormat.format(date));

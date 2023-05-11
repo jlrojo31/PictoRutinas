@@ -56,14 +56,16 @@ public class AdaptadorTareas extends FirebaseRecyclerAdapter<Tarea,AdaptadorTare
         holder.picto.setImageBitmap((BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length)));
 
         if (mContext instanceof EditorTareas) {
-            try {
-                if(position== 0){
-                    ((EditorTareas)mContext).setHora();
-                }if(position==1){
-                    ((EditorTareas)mContext).actualizarHoras();
+            if(position== 0) {
+                ((EditorTareas) mContext).setHora();
+                try {
+                    {
+                        ((EditorTareas) mContext).actualizarHoras();
+                    }
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
                 }
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
+
             }
         }
         holder.editButton.setOnClickListener(new View.OnClickListener() {

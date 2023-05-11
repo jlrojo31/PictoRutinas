@@ -170,7 +170,7 @@ public class HomeAlumno extends AppCompatActivity {
         boolean primero = false;
         if (am_pm==1)  amPMS="PM"; else amPMS="AM";
 
-        DateFormat dateFormat = new SimpleDateFormat("hh:mm a");
+        DateFormat dateFormat = new SimpleDateFormat("hh:mm a",Locale.US);
         Date dateActual, dateIni, dateFin;
 
         boolean encontrado = false;
