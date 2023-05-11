@@ -280,7 +280,6 @@ public class TareaDef extends AppCompatActivity {
                             Intent i = new Intent(TareaDef.this, EditorTareas.class);
                             i.putExtra("idRutina",idRutina);
                             i.putExtra("nombre",nombreRut);
-                            Log.d("TAG",nombreRut);
                             startActivity(i);
                         }
                     })
@@ -295,7 +294,7 @@ public class TareaDef extends AppCompatActivity {
     private String getBitstreamPicto(ImageView picto){
         Bitmap bitmap = ((BitmapDrawable) picto.getDrawable()).getBitmap();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,100,byteArrayOutputStream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG,5,byteArrayOutputStream);
         byte[] byteArray = byteArrayOutputStream.toByteArray();
         String pic = Base64.encodeToString(byteArray,Base64.DEFAULT);
         return pic;
