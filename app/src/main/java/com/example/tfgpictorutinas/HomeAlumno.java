@@ -193,6 +193,7 @@ public class HomeAlumno extends AppCompatActivity {
                     cal.set (Calendar.HOUR, Integer.valueOf(hora));
                     cal.set (Calendar.MINUTE, Integer.valueOf(minutos));
                     if (ampm.equals("AM")) cal.set(Calendar.AM_PM, Calendar.AM);
+                    else cal.set(Calendar.AM_PM, Calendar.PM);
                     cal.set (Calendar.SECOND, 0);
                     alarmaActual.setAlarm(HomeAlumno.this,cal,tarea.getIdTarea());
                     encontrado = true;
@@ -237,6 +238,7 @@ public class HomeAlumno extends AppCompatActivity {
             cal.set (Calendar.MINUTE, Integer.valueOf(minutos));
             if ( tareaPosterior==0L) cal.set(Calendar.SECOND,59); else cal.set(Calendar.SECOND,0);
             if (ampm.equals("AM")) cal.set(Calendar.AM_PM, Calendar.AM);
+            else cal.set(Calendar.AM_PM, Calendar.PM);
             alarmaActual.setAlarm(HomeAlumno.this,cal,tareaPosterior);
         }
     }

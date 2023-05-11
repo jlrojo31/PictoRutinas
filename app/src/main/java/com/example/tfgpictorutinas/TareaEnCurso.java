@@ -108,6 +108,7 @@ public class TareaEnCurso extends AppCompatActivity {
                 cal.set (Calendar.HOUR, Integer.valueOf(hora));
                 cal.set (Calendar.MINUTE, Integer.valueOf(minutos));
                 if (ampm.equals("AM")) cal.set(Calendar.AM_PM, Calendar.AM);
+                else cal.set(Calendar.AM_PM, Calendar.PM);
                 cal.set (Calendar.SECOND, 0);
                 alarmaRegreso.setAlarm(TareaEnCurso.this,cal);
 
