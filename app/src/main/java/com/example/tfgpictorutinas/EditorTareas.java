@@ -284,6 +284,7 @@ public class EditorTareas extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         adaptadorTareas.stopListening();
+        finish();
     }
 
 
