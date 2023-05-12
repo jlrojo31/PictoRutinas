@@ -39,7 +39,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 public class HomeAlumno extends AppCompatActivity {
 
@@ -79,6 +83,13 @@ public class HomeAlumno extends AppCompatActivity {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             String aux = LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.FULL,new Locale("es","ES"));
             hoy = aux.toUpperCase().charAt(0) + aux.substring(1, aux.length());
+        }else{
+            Calendar ahora = Calendar.getInstance();
+            ahora.setTime(new Date());
+            Map<String,Integer> map = ahora.getDisplayNames(Calendar.DAY_OF_WEEK, Calendar.LONG, new Locale("es"));
+            String aux = getKeys(map, ahora.get(Calendar.DAY_OF_WEEK));
+            hoy = aux.toUpperCase().charAt(0) + aux.substring(1, aux.length());
+
         }
         TextView diaActual = (TextView) findViewById(R.id.idDiaTV);
         diaActual.setText(hoy);
@@ -241,6 +252,22 @@ public class HomeAlumno extends AppCompatActivity {
             else cal.set(Calendar.AM_PM, Calendar.PM);
             alarmaActual.setAlarm(HomeAlumno.this,cal,tareaPosterior);
         }
+    }
+
+
+    private static String getKeys(Map<String, Integer> map, Integer value) {
+
+        String result = "";
+        if (map.containsValue(value)) {
+            for (Map.Entry<String, Integer> entry : map.entrySet()) {
+                if (Objects.equals(entry.getValue(), value)) {
+                    result=entry.getKey();
+                    break;
+                }
+            }
+        }
+        return result;
+
     }
 
 }

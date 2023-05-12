@@ -2,13 +2,19 @@ package com.example.tfgpictorutinas;
 
 import static android.content.ContentValues.TAG;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -33,6 +39,7 @@ public class RutinaDef extends AppCompatActivity {
     private GridLayout gridRepeticiones;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference().child("pictorutinas").child("rutinas");
+    DatabaseReference myRefUsuRuti = database.getReference().child("pictorutinas").child("usuariosrutinas");
 
     Long idRutina;
     String nombre;
@@ -122,19 +129,32 @@ public class RutinaDef extends AppCompatActivity {
             }
         });
 
-
-        // onclick listener para el boton editar tarea.
         tvNombre.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 // If the event is a key-down event on the "enter" button
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    Map<String, Object> update = new HashMap<>();
-                    update.put("nombre", tvNombre.getText().toString());
-                    DatabaseReference referencia = myRef.child(idRutina.toString());
-                    referencia.updateChildren(update);
-                    return true;
+                if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                    switch (keyCode){
+                        case KeyEvent.KEYCODE_DPAD_CENTER:
+                        case KeyEvent.KEYCODE_ENTER:
+                            Map<String, Object> update = new HashMap<>();
+                            update.put("nombre", tvNombre.getText().toString());
+                            DatabaseReference referencia = myRef.child(idRutina.toString());
+                            referencia.updateChildren(update);
+                            closeSoftKeyBoard();
+                            tvNombre.setFocusable(false);
+
+                            return true;
+                        default:
+                            break;
+                    }
                 }
+                return false;
+            }
+        });
+        tvNombre.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                tvNombre.setFocusableInTouchMode(true);
                 return false;
             }
         });
@@ -159,6 +179,21 @@ public class RutinaDef extends AppCompatActivity {
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
                         Log.e(TAG, "onCancelled", databaseError.toException());
+                    }
+                });
+                myRefUsuRuti.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for(DataSnapshot data: dataSnapshot.getChildren()){
+                            HashMap dataHash = (HashMap) data.getValue();
+                            if ((Long)dataHash.get("idRutina") == idRutina){
+                                data.getRef().removeValue();
+                            }
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
                     }
                 });
             }
@@ -186,5 +221,11 @@ public class RutinaDef extends AppCompatActivity {
         }
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
         myRef.child("pictorutinas").child("rutinas").child(String.valueOf(idRutina)).child("repeticiones").setValue(dias);
+    }
+
+    public void closeSoftKeyBoard() {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
     }
 }

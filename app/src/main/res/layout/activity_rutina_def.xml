@@ -85,7 +85,7 @@
         android:layout_marginTop="20dp"
         android:padding="15dp"
         android:layout_below="@id/idBtEliminarRutina"
-        android:background="@color/material_dynamic_neutral90"
+        android:background="@color/grey"
         android:visibility="gone">
 
         <CheckBox

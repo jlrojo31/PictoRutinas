@@ -56,7 +56,7 @@ public class AraasacPics extends AppCompatActivity {
                     ImageView imgView = findViewById(resID);
                     imgView.setImageResource(0);
                 }
-                getImagenes(postService, searchView.getQuery().toString());
+                getImagenes(postService, searchView.getQuery().toString().trim());
                 return false;
             }
 
