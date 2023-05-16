@@ -1,18 +1,22 @@
 package com.example.tfgpictorutinas;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -92,6 +96,8 @@ public class TareaDef extends AppCompatActivity {
         idRutina = extras.getLong("idRutina");
         idTarea = extras.getLong("idTarea");
         key=extras.getString("key");
+
+        picto.setColorFilter(Color.argb(155, 185, 185, 185), PorterDuff.Mode.SRC_ATOP);
 
         nombreRut = extras.getString("nombre");
         if(key != null ){
@@ -391,20 +397,54 @@ public class TareaDef extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        ImageView imagenedit = findViewById(R.id.editFoto);
 
         if(resultCode == RESULT_OK && requestCode == SELEC_IMAGEN) {
             imagenUri = data.getData();
+            imagenedit.setImageResource(0);
+            picto.setColorFilter(0);
             picto.setImageURI(imagenUri);
         } else if(resultCode == RESULT_OK && requestCode == TOMAR_FOTO) {
+            imagenedit.setImageResource(0);
+            picto.setColorFilter(0);
             picto.setImageURI(imagenUri);
         }else if(resultCode == RESULT_OK && requestCode == ARRASAC) {
             String imagen;
             imagen = data.getStringExtra("imagen");
             if (imagen!=null) {
                 byte[] imageAsBytes = Base64.decode(imagen, Base64.DEFAULT);
+                imagenedit.setImageResource(0);
+                picto.setColorFilter(0);
                 picto.setImageBitmap((BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length)));
             }
         }
+    }
+
+    private void backPressed () {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Cancelar tarea");
+        builder.setMessage("¿Estas seguro? \n Los datos no se guardaran");
+        builder.setPositiveButton("SI", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // Do nothing but close the dialog
+                finish();
+            }
+        });
+
+        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Do nothing
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+    @Override
+    public void onBackPressed()
+    {
+        backPressed();
     }
 }
 

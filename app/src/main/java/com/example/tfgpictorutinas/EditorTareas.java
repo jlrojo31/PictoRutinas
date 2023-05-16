@@ -281,16 +281,16 @@ public class EditorTareas extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        recyclerView.getRecycledViewPool().clear();
+        adaptadorTareas.notifyDataSetChanged();
         adaptadorTareas.startListening();
     }
-
 
 
     @Override
     protected void onStop() {
         super.onStop();
         adaptadorTareas.stopListening();
-
     }
 
 }
