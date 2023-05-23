@@ -205,6 +205,7 @@ public class TareaDef extends AppCompatActivity {
                         i.putExtra("nombre",nombreRut);
                         Log.d("TAG",nombreRut);
                         startActivity(i);
+                        finish();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -287,6 +288,7 @@ public class TareaDef extends AppCompatActivity {
                             i.putExtra("idRutina",idRutina);
                             i.putExtra("nombre",nombreRut);
                             startActivity(i);
+                            finish();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {

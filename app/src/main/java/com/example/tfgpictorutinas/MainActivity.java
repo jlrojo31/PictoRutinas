@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
                     //Firebase RealTime Database
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    database.setPersistenceEnabled(true);
                     DatabaseReference myRef = database.getReference().child("pictorutinas").child("usuarios");
 
                     myRef.addListenerForSingleValueEvent(new ValueEventListener() {

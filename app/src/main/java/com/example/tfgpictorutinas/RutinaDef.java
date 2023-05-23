@@ -84,7 +84,7 @@ public class RutinaDef extends AppCompatActivity {
                 Bundle extras = getIntent().getExtras();
                 if (extras!=null) {
                     i.putExtra("idRutina", extras.getLong("idRutina"));
-                    i.putExtra("nombre", extras.getString("nombre"));
+                    i.putExtra("nombre", tvNombre.getText().toString());
                     i.putExtra("repeticiones", extras.getString("repeticiones"));
                 }
                 startActivity(i);

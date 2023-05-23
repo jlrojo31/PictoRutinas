@@ -15,7 +15,7 @@
         android:padding="10dp"
         android:text="Rutinas"
         android:textAlignment="center"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="30dp"
         android:layout_centerHorizontal="true"
         android:textColor="@color/black"
         android:textSize="40sp" />
@@ -23,7 +23,7 @@
     <ListView
         android:id="@+id/lista"
         android:layout_marginTop="90dp"
-        android:layout_height="440dp"
+        android:layout_height="530dp"
         android:layout_width="match_parent"
         android:layout_marginLeft="35dp"
         android:layout_marginRight="35dp"
@@ -43,39 +43,21 @@
 
     <Button
         android:id="@+id/idBtnGA"
-        android:layout_width="340dp"
-        android:layout_height="55dp"
-        android:layout_below="@id/idBtnAniadir"
-        android:layout_centerHorizontal="true"
-        android:text="Gestión Alumnos"
-        android:textSize="21dp"
-        android:textAllCaps="false"
+        android:layout_width="140dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="10dp"
+        android:text="Horarios"
         android:textColor="@color/black"
-        android:drawableLeft="@drawable/alumno"
         android:backgroundTint="@color/grey"/>
 
-    <Button
-        android:id="@+id/idBtnAraasac"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/idheadTV"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="570dp"
-        android:text="Araasac"
-        android:textSize="15dp"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:backgroundTint="@color/cardview_light_background"/>
 
     <!--Boton de logout-->
     <Button
         android:id="@+id/idBtnLogout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/idheadTV"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="570dp"
-        android:layout_marginLeft="290dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginLeft="300dp"
         android:text="Logout"
         android:textAllCaps="false" />
 

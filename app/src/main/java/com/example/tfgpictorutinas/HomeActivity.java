@@ -139,6 +139,7 @@ public class HomeActivity extends AppCompatActivity {
                 listaRutinas.add(a);
                 myRef.child(String.valueOf(autoincrementid+1)).setValue(a);
                 list.setAdapter(adapter);
+                Toast.makeText(HomeActivity.this,"Se ha añadido rutina a la lista",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -185,17 +186,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        // boton de araasac
-        Button araasacBtn = findViewById(R.id.idBtnAraasac);
-
-        // onclick listener para el boton araasac.
-        araasacBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(HomeActivity.this, AraasacPics.class);
-                startActivity(i);
-            }
-        });
     }
 
     @Override
