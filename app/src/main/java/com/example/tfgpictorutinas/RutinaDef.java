@@ -174,6 +174,7 @@ public class RutinaDef extends AppCompatActivity {
                         Intent i = new Intent(RutinaDef.this, HomeActivity.class);
                         Bundle extras = getIntent().getExtras();
                         startActivity(i);
+                        finish();
                     }
 
                     @Override

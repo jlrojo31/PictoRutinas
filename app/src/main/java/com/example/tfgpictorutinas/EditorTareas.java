@@ -111,7 +111,8 @@ public class EditorTareas extends AppCompatActivity {
 
                             startActivity(intent);
                         }else if (!hora_ini_rut.getText().toString().isEmpty()){
-                            autoincrementid = ((Tarea)listaTareas.get(listaTareas.size()-1)).getIdTarea();
+                            if (listaTareas.isEmpty()) autoincrementid = autoincrementid + 1;
+                            else autoincrementid = ((Tarea)listaTareas.get(listaTareas.size()-1)).getIdTarea();
                             long id_new_tarea = autoincrementid+1;
                             Intent intent = new Intent(EditorTareas.this, TareaDef.class);
 
