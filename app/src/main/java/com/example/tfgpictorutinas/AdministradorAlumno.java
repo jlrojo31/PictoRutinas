@@ -57,7 +57,7 @@ public class AdministradorAlumno extends AppCompatActivity {
                                 Map<String, Object> update = new HashMap<>();
                                 update.put("administrador", admin);
                                 DatabaseReference referencia = myRef.child(key);
-                                myRef.keepSynced(true);
+                                referencia.keepSynced(true);
                                 referencia.updateChildren(update);
                                 break;
                             };
