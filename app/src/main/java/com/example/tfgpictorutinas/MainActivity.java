@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                         login = true;
                     }
                     DatabaseReference myRef = database.getReference().child("pictorutinas").child("usuarios");
-
+                    myRef.keepSynced(true);
                     myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {

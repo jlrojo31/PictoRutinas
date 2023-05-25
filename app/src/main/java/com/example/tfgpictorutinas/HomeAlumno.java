@@ -77,8 +77,11 @@ public class HomeAlumno extends AppCompatActivity {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference refUsuRutinas = database.getReference().child("pictorutinas").child("usuariosrutinas");
+        refUsuRutinas.keepSynced(true);
         DatabaseReference refRutinas = database.getReference().child("pictorutinas").child("rutinas");
+        refRutinas.keepSynced(true);
         DatabaseReference refTareas = database.getReference().child("pictorutinas").child("tareas");
+        refTareas.keepSynced(true);
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             String aux = LocalDate.now().getDayOfWeek().getDisplayName(TextStyle.FULL,new Locale("es","ES"));

@@ -26,11 +26,12 @@ public class AdministradorAlumno extends AppCompatActivity {
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference().child("pictorutinas").child("usuarios");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_administrador_alumno);
-
+        myRef.keepSynced(true);
         ToggleButton repeticionesBtn = findViewById(R.id.tgAdminAlum);
 
         Bundle extras = getIntent().getExtras();
@@ -56,6 +57,7 @@ public class AdministradorAlumno extends AppCompatActivity {
                                 Map<String, Object> update = new HashMap<>();
                                 update.put("administrador", admin);
                                 DatabaseReference referencia = myRef.child(key);
+                                myRef.keepSynced(true);
                                 referencia.updateChildren(update);
                                 break;
                             };

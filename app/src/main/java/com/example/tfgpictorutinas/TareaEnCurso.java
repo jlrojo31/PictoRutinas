@@ -67,6 +67,7 @@ public class TareaEnCurso extends AppCompatActivity {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference refTareas = database.getReference().child("pictorutinas").child("tareas");
+        refTareas.keepSynced(true);
 
         idTareaEnCurso.setOnClickListener(new View.OnClickListener() {
             @Override

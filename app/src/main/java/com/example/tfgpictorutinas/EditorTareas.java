@@ -67,6 +67,7 @@ public class EditorTareas extends AppCompatActivity {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference refTareas = database.getReference().child("pictorutinas").child("tareas");
+        refTareas.keepSynced(true);
         nombrerutina = findViewById(R.id.nombreRut);
 
         new_tarea = findViewById(R.id.idBtnNuevaTarea);
@@ -218,6 +219,7 @@ public class EditorTareas extends AppCompatActivity {
                         DatabaseReference referencia =
                                 FirebaseDatabase.getInstance().getReference().child("pictorutinas")
                                         .child("tareas").child(childSnapshot.getRef().getKey());
+                        referencia.keepSynced(true);
                         try {
                             ini_old =sdf.parse(adaptadorTareas.getItem(count).getHora_ini());
                             end_old =sdf.parse(adaptadorTareas.getItem(count).getHora_end());

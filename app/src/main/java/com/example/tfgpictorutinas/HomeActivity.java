@@ -52,7 +52,7 @@ public class HomeActivity extends AppCompatActivity {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference().child("pictorutinas").child("rutinas");
-
+        myRef.keepSynced(true);
         //MIO
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
         if (usuario != null) {

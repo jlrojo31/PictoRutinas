@@ -50,6 +50,8 @@ public class RutinaDef extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rutina_def);
+        myRef.keepSynced(true);
+        myRefUsuRuti.keepSynced(true);
 
         cbl= (CheckBox) findViewById(R.id.idCbLunes);
         cbm= (CheckBox) findViewById(R.id.idCbMartes);
@@ -139,6 +141,7 @@ public class RutinaDef extends AppCompatActivity {
                             Map<String, Object> update = new HashMap<>();
                             update.put("nombre", tvNombre.getText().toString());
                             DatabaseReference referencia = myRef.child(idRutina.toString());
+                            referencia.keepSynced(true);
                             referencia.updateChildren(update);
                             closeSoftKeyBoard();
                             tvNombre.setFocusable(false);
@@ -221,6 +224,7 @@ public class RutinaDef extends AppCompatActivity {
             dias+="D";
         }
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
+        myRef.keepSynced(true);
         myRef.child("pictorutinas").child("rutinas").child(String.valueOf(idRutina)).child("repeticiones").setValue(dias);
     }
 

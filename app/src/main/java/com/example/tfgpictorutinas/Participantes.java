@@ -44,7 +44,8 @@ public class Participantes extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_participantes);
-
+        myRef.keepSynced(true);
+        refUsuRutinas.keepSynced(true);
 
         Bundle extras = getIntent().getExtras();
         if (extras!=null) {

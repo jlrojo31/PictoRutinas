@@ -36,6 +36,7 @@ public class Alumnos extends AppCompatActivity {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference().child("pictorutinas").child("usuarios");
+        myRef.keepSynced(true);
 
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

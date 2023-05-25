@@ -32,7 +32,8 @@ public class HorarioAlumno extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_horario_alumno);
-
+        myRef.keepSynced(true);
+        myRefRutinas.keepSynced(true);
         Bundle extras = getIntent().getExtras();
         if (extras!=null) {
             alumno = extras.getString("alumno");
