@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     // declaring a const int value which we
     // will be using in Firebase auth.
     public static final int RC_SIGN_IN = 1;
+    public static boolean login = false;
     boolean administrador = true;
     // creating an auth listener for our Firebase auth
     private FirebaseAuth.AuthStateListener mAuthStateListener;
@@ -87,7 +88,10 @@ public class MainActivity extends AppCompatActivity {
 
                     //Firebase RealTime Database
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    database.setPersistenceEnabled(true);
+                    if (!login) {
+                        database.setPersistenceEnabled(true);
+                        login = true;
+                    }
                     DatabaseReference myRef = database.getReference().child("pictorutinas").child("usuarios");
 
                     myRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -112,9 +116,11 @@ public class MainActivity extends AppCompatActivity {
                                 Intent i = new Intent(MainActivity.this, AdministradorAlumno.class);
                                 i.putExtra("usuario", name);
                                 startActivity(i);
+                                finish();
                             }else{
                                 Intent i = new Intent(MainActivity.this, HomeAlumno.class);
                                 startActivity(i);
+                                finish();
                             }
                         }
                         @Override
