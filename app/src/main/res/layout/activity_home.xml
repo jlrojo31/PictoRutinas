@@ -22,11 +22,13 @@
 
     <ListView
         android:id="@+id/lista"
-        android:layout_marginTop="90dp"
+        android:layout_marginTop="10dp"
         android:layout_height="490dp"
         android:layout_width="match_parent"
         android:layout_marginLeft="35dp"
         android:layout_marginRight="35dp"
+        android:layout_above="@+id/idBtnAniadir"
+        android:layout_below="@+id/idheadTV"
         android:background="@color/white"
         android:divider="@drawable/list_divider"
         android:scrollbarAlwaysDrawVerticalTrack="true">
@@ -36,7 +38,8 @@
         android:id="@+id/idBtnAniadir"
         android:layout_width="60dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/lista"
+        android:layout_marginBottom="15dp"
+        android:layout_alignParentBottom="true"
         android:layout_marginLeft="290dp"
         android:drawableLeft="@drawable/plus_circle_outline"
         android:backgroundTint="@color/cardview_light_background"/>

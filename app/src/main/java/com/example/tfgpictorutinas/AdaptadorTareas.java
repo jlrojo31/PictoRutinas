@@ -55,7 +55,7 @@ public class AdaptadorTareas extends FirebaseRecyclerAdapter<Tarea,AdaptadorTare
         byte[] imageAsBytes = Base64.decode(model.getFotoTarea(), Base64.DEFAULT);
         holder.picto.setImageBitmap((BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length)));
 
-        if (mContext instanceof EditorTareas) {
+       /* if (mContext instanceof EditorTareas) {
             if(position== 0) {
                 ((EditorTareas) mContext).setHora();
                 try {
@@ -67,7 +67,7 @@ public class AdaptadorTareas extends FirebaseRecyclerAdapter<Tarea,AdaptadorTare
                 }
 
             }
-        }
+        }*/
         holder.editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,13 +106,13 @@ public class AdaptadorTareas extends FirebaseRecyclerAdapter<Tarea,AdaptadorTare
                     public void onClick(DialogInterface dialog, int which) {
                         FirebaseDatabase.getInstance().getReference().child("pictorutinas")
                                 .child("tareas").child(getRef(position).getKey()).removeValue();
-                        if (mContext instanceof EditorTareas) {
+                        /*if (mContext instanceof EditorTareas) {
                             try {
                                 ((EditorTareas)mContext).actualizarHoras();
                             } catch (ParseException e) {
                                 throw new RuntimeException(e);
                             }
-                        }
+                        }*/
                         Toast.makeText(holder.descripcion.getContext(),"La tarea"+model.getNombreTarea()+" se ha eliminado",Toast.LENGTH_SHORT).show();
                     }
                 });
