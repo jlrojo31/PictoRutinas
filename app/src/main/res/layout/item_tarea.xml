@@ -1,75 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tarea"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="8dp"
     android:orientation="horizontal">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <Button
-        android:id="@+id/idBtnBTarea"
-        android:layout_width="55dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
-        android:layout_marginLeft="10dp"
-        android:backgroundTint="@color/cardview_light_background"
-        android:drawableLeft="@drawable/delete_tarea"
-        android:drawableTint="@color/grey" />
 
-    <Button
-        android:id="@+id/idBtnETarea"
-        android:layout_width="55dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/idBtnBTarea"
-        android:backgroundTint="@color/cardview_light_background"
-        android:drawableLeft="@drawable/edit_tarea"
-        android:drawableTint="@color/grey" />
+        <ImageButton
+            android:id="@+id/idBtnBTarea"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/cardview_light_background"
+            android:drawableTint="@color/grey"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginLeft="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/idBtnETarea"
+            app:srcCompat="@drawable/delete_tarea" />
 
-    <ImageView
-        android:id="@+id/fotoTarea"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/idBtnETarea"
-        android:src="@drawable/alumno2" />
+        <ImageButton
+            android:id="@+id/idBtnETarea"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_toRightOf="@+id/idBtnBTarea"
+            android:backgroundTint="@color/cardview_light_background"
+            android:src="@drawable/edit_tarea"
+            android:drawableTint="@color/grey"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginLeft="5dp"
+            app:layout_constraintStart_toEndOf="@+id/idBtnBTarea"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/fotoTarea"
+            app:layout_constraintTop_toTopOf="parent"
+            />
 
-    <TextView
-        android:id="@+id/idNomTarea"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:layout_toRightOf="@+id/fotoTarea"
-        android:hint="Nombre tarea"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
-        android:textColor="@color/black"
-        android:textSize="20sp" />
+        <ImageView
+            android:id="@+id/fotoTarea"
+            android:layout_width="100dp"
+            android:layout_height="150dp"
+            android:layout_toRightOf="@+id/idBtnETarea"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/alumno2"
+            android:layout_marginLeft="5dp"
+            app:layout_constraintEnd_toStartOf="@+id/idNomTarea"
+            app:layout_constraintStart_toEndOf="@+id/idBtnETarea"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
 
-    <TextView
-        android:id="@+id/tiempoTare_ini"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/fotoTarea"
-        android:layout_below="@id/idNomTarea"
-        android:hint="0:00"
-        android:layout_marginLeft="10dp"
-        android:textColor="@color/black"
-        android:textSize="17dp" />
-    <TextView
-        android:id="@+id/tiempoTare_end"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/fotoTarea"
-        android:layout_below="@id/tiempoTare_ini"
-        android:hint="0:00"
-        android:layout_marginLeft="10dp"
-        android:textColor="@color/black"
-        android:textSize="17dp" />
-    </RelativeLayout>
+        <TextView
+            android:id="@+id/idNomTarea"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:hint="Nombre tarea"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title.Inverse"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/fotoTarea"
+            />
+
+        <TextView
+            android:id="@+id/tiempoTare_ini"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            android:hint="00:00 AM"
+            android:textColor="@color/black"
+            android:textSize="17dp"
+            app:layout_constraintStart_toEndOf="@+id/fotoTarea"
+            app:layout_constraintTop_toBottomOf="@id/idNomTarea"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/tiempoTare_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tiempoTare_ini"
+            android:layout_toRightOf="@+id/fotoTarea"
+            android:hint="00:00 AM"
+            android:textColor="@color/black"
+            android:textSize="17dp"
+            android:layout_marginTop="5dp"
+            app:layout_constraintStart_toEndOf="@+id/fotoTarea"
+            app:layout_constraintTop_toBottomOf="@id/tiempoTare_ini"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>
