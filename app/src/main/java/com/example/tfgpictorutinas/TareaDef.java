@@ -244,7 +244,7 @@ public class TareaDef extends AppCompatActivity {
 
     private boolean datoscorectos() throws ParseException {
         boolean datos_correctos;
-        Date date1 = get_date(tarea_hora_ini);
+        Date date1 = get_date(String.valueOf(hora_ini.getText()));
         Date date2 = get_date(String.valueOf(hora_end.getText()));
         if(date1.before(date2)){
             datos_correctos = true;
@@ -337,25 +337,22 @@ public class TareaDef extends AppCompatActivity {
             public void onTimeSet(TimePicker timePicker, int hour, int minute) {
 
                 String minute_f;
-                String hour_f;
+                String hour_f = String.valueOf(hour);
                 String am_pm = "AM";
-
+                if(hour>12){
+                    am_pm = "PM";
+                    hour_f = String.valueOf(hour-12);
+                }if(hour==12){
+                    am_pm= "PM";
+                }
                 //añadir 00;
                 if(minute<10){
                     minute_f= "0"+minute;
                 }else {
                     minute_f= String.valueOf(minute);
                 }
-                if(hour<10){
-                    hour_f= "0"+hour;
-                }else {
-                    hour_f= String.valueOf(hour);
-                }
-                if(hour>12){
-                    am_pm = "PM";
-                    hour_f = String.valueOf(hour-12);
-                }if(hour==12){
-                    am_pm= "PM";
+                if(hour<10 || hour > 12){
+                    hour_f= "0"+hour_f;
                 }
                 //Showing the picked value in the textView
                 //hora.setText(String.valueOf(hour)+ ":"+String.valueOf(minute)+" "+am_pm);
