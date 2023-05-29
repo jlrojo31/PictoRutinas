@@ -6,9 +6,21 @@
     android:orientation="horizontal">
 
     <TextView
+        android:id="@+id/idRutHor"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:text=""
+        android:textColor="@color/black"
+        android:textSize="13sp"
+        android:layout_marginTop="10dp"
+        android:textStyle="bold"
+        android:background="@color/orange"/>
+
+    <TextView
         android:id="@+id/idLunes"
-        android:layout_width="50dp"
-        android:layout_height="40dp"
+        android:layout_width="32dp"
+        android:layout_height="60dp"
         android:gravity="center"
         android:text=""
         android:textColor="@color/black"
@@ -17,8 +29,8 @@
 
     <TextView
         android:id="@+id/idMartes"
-        android:layout_width="50dp"
-        android:layout_height="40dp"
+        android:layout_width="32dp"
+        android:layout_height="60dp"
         android:gravity="center"
         android:text=""
         android:textColor="@color/black"
@@ -27,8 +39,8 @@
 
     <TextView
         android:id="@+id/idMiercoles"
-        android:layout_width="50dp"
-        android:layout_height="40dp"
+        android:layout_width="32dp"
+        android:layout_height="60dp"
         android:gravity="center"
         android:text=""
         android:textColor="@color/black"
@@ -37,8 +49,8 @@
 
     <TextView
         android:id="@+id/idJueves"
-        android:layout_width="50dp"
-        android:layout_height="40dp"
+        android:layout_width="32dp"
+        android:layout_height="60dp"
         android:gravity="center"
         android:text=""
         android:textColor="@color/black"
@@ -47,8 +59,8 @@
 
     <TextView
         android:id="@+id/idViernes"
-        android:layout_width="50dp"
-        android:layout_height="40dp"
+        android:layout_width="32dp"
+        android:layout_height="60dp"
         android:text=""
         android:gravity="center"
         android:textColor="@color/black"
@@ -57,8 +69,8 @@
 
     <TextView
         android:id="@+id/idSabado"
-        android:layout_width="50dp"
-        android:layout_height="40dp"
+        android:layout_width="32dp"
+        android:layout_height="60dp"
         android:gravity="center"
         android:text=""
         android:textColor="@color/black"
@@ -67,8 +79,8 @@
 
     <TextView
         android:id="@+id/idDomingo"
-        android:layout_width="50dp"
-        android:layout_height="40dp"
+        android:layout_width="32dp"
+        android:layout_height="60dp"
         android:gravity="center"
         android:text=""
         android:textColor="@color/black"
