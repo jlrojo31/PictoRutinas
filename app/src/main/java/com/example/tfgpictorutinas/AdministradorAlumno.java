@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ToggleButton;
 
 import com.example.tfgpictorutinas.firebaseRDB.Usuario;
@@ -32,21 +33,18 @@ public class AdministradorAlumno extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_administrador_alumno);
         myRef.keepSynced(true);
-        ToggleButton repeticionesBtn = findViewById(R.id.tgAdminAlum);
+
+        ImageButton AdminBtn = findViewById(R.id.idBtnAdmin);
+        ImageButton AlumBtn = findViewById(R.id.idBtnAlum);
 
         Bundle extras = getIntent().getExtras();
         if (extras!=null) {
             nombre = extras.getString("usuario");
         }
 
-        Button AdminAlumBtn = findViewById(R.id.idBtnAdminAlum);
-
-        // onclick listener para el boton de aniadir
-        AdminAlumBtn.setOnClickListener(new View.OnClickListener() {
+        AdminBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (repeticionesBtn.isChecked()) admin=true; else admin=false;
-
                 myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -55,20 +53,15 @@ public class AdministradorAlumno extends AppCompatActivity {
                             HashMap dataHash = (HashMap) data.getValue();
                             if (nombre.equals((String) dataHash.get("nombre"))){
                                 Map<String, Object> update = new HashMap<>();
-                                update.put("administrador", admin);
+                                update.put("administrador", true);
                                 DatabaseReference referencia = myRef.child(key);
                                 referencia.keepSynced(true);
                                 referencia.updateChildren(update);
                                 break;
                             };
                         }
-                        if (admin){
-                            Intent i = new Intent(AdministradorAlumno.this, HomeActivity.class);
-                            startActivity(i);
-                        }else{
-                            Intent i = new Intent(AdministradorAlumno.this, HomeAlumno.class);
-                            startActivity(i);
-                        }
+                        Intent i = new Intent(AdministradorAlumno.this, HomeActivity.class);
+                        startActivity(i);
                     }
 
                     @Override
@@ -80,5 +73,33 @@ public class AdministradorAlumno extends AppCompatActivity {
             }
         });
 
+        AlumBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for(DataSnapshot data: dataSnapshot.getChildren()){
+                            String key= data.getKey().toString();
+                            HashMap dataHash = (HashMap) data.getValue();
+                            if (nombre.equals((String) dataHash.get("nombre"))){
+                                Map<String, Object> update = new HashMap<>();
+                                update.put("administrador", false);
+                                DatabaseReference referencia = myRef.child(key);
+                                referencia.keepSynced(true);
+                                referencia.updateChildren(update);
+                                break;
+                            };
+                        }
+                        Intent i = new Intent(AdministradorAlumno.this, HomeAlumno.class);
+                        startActivity(i);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
+            }
+        });
     }
 }

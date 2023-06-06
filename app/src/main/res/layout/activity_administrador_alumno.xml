@@ -3,31 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:layout_height="600dp"
     tools:context=".AdministradorAlumno">
 
-
-    <ToggleButton
-        android:id="@+id/tgAdminAlum"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="200dp"
+    <ImageButton
+        android:id="@+id/idBtnAdmin"
+        android:layout_width="185dp"
+        android:layout_height="195dp"
+        android:layout_marginLeft="10dp"
         android:layout_gravity="center"
-        android:checked="true"
-        android:background="@drawable/tg_admin_alum_bg"/>
+        android:layout_marginTop="10dp"
+        android:background="@drawable/admin"
+        />
 
-    <Button
-        android:id="@+id/idBtnAdminAlum"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+
+    <ImageButton
+        android:id="@+id/idBtnAlum"
+        android:layout_width="185dp"
+        android:layout_height="195dp"
+        android:layout_marginLeft="5dp"
         android:layout_gravity="center"
-        android:layout_marginTop="70dp"
-        android:text="Aceptar"
-        android:textSize="15dp"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:backgroundTint="@color/cardview_light_background"/>
-
+        android:layout_marginTop="10dp"
+        android:background="@drawable/alumno2"
+        />
 
 </LinearLayout>
